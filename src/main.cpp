@@ -37,7 +37,6 @@ int main(){
     while (event = kb_event_reader->next()) {
         switch (event->kind) {
             case kb::Event::DOWN: {
-                std::cout << "DOWN!" << std::endl;
                 type.down(event->button);
                 break;
             }

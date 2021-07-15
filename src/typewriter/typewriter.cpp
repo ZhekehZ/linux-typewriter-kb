@@ -1,4 +1,5 @@
 #include "typewriter/typewriter.hpp"
+#include "keyboard/kb_button_codes.hpp"
 
 #include <map>
 #include <string>
@@ -53,18 +54,10 @@ namespace {
         }
     }
 
-    bool is_special(int code) {
-        return false;
-    }
-
-    bool is_enter(int code) {
-        return code == 28;
-    }
-
     detail::InnerButtonConfig const & get_btn_cfg(int code, detail::InnerConfig const & cfg) {
-        if (is_special(code)) {
+        if (kb::code::is_special(code)) {
             return cfg.special_button;
-        } else if (is_enter(code)) {
+        } else if (kb::code::is_enter(code)) {
             return cfg.enter_button;
         } 
         return cfg.regular_button;
