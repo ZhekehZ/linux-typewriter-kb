@@ -3,53 +3,60 @@
 #include "keyboard/kb_event_reader.hpp"
 #include "keyboard/kb_linux_fs.hpp"
 #include "sound/snd_sdl_mixer.hpp"
-#include "sound/snd_wav_sound.hpp"
 
-#include <thread>
+#include "typewriter/typewriter.hpp"
+#include "typewriter/config.hpp"
+
+std::optional<kb::event_reader> build_reader_for_all_keyboards() {
+    auto keyboards_dss = kb::linux_filesystem::open_and_get_all_keyboards();
+    if (keyboards_dss.empty()) {
+        return std::nullopt;
+    }
+    return kb::event_reader(std::move(keyboards_dss));
+}
+
 
 int main(){
-    snd::SDLRAIIContextManager manager(44100, 8, 1024);
-    
+    snd::SDLRAIIContextManager manager(44100, 7, 1024);
+    auto kb_event_reader = build_reader_for_all_keyboards();
 
     if (!manager) {
         std::cerr << manager.get_error_message() << std::endl;
         return EXIT_FAILURE;
     }
 
-    auto dss = kb::linux_filesystem::open_and_get_all_keyboards();
-
-    if (dss.empty()) {
-        std::cerr << "No kb found!" << std::endl;
+    if (!kb_event_reader) {
+        std::cerr << "No keyboards found. Make sure you are root." << std::endl;
         return EXIT_FAILURE;
-    } else {
-        std::cout << "Found " << dss.size() << " keyboard(s)" << std::endl;
     }
 
-    // snd::WAVSound ss[] = {
-    //     snd::WAVSound("assets/tap1.wav", 50),
-    //     snd::WAVSound("assets/tap2.wav", 50),
-    //     snd::WAVSound("assets/tap3.wav", 50)};
+    typewriter::Typewriter type(DEFAULT_CONFIG);
 
-    snd::WAVSound down("assets/regular_btn/down/1.wav", 100);
-    snd::WAVSound up("assets/regular_btn/up/1.wav", 50);
+    std::cout << "SUCCESSFULLY INITIALIZED" << std::endl;
 
-    snd::WAVSound hold("tap.wav", 50);
-
-    kb::event_reader reader(std::move(dss));
-    while (auto next = reader.next()) {
-        if (next->kind == kb::Event::DOWN) {
-            // int c = rand() % 3;
-            // ss[c].play();
-            down.play();
-        }
-        if (next->kind == kb::Event::UP) {
-            up.play();
-        }
-        if (next->kind == kb::Event::PRESSED) {
-            
-            // hold.play();
+    std::optional<kb::Event> event;
+    while (event = kb_event_reader->next()) {
+        switch (event->kind) {
+            case kb::Event::DOWN: {
+                type.down(event->button);
+                break;
+            }
+            case kb::Event::UP: {
+                type.up(event->button);
+                break;
+            }
+            case kb::Event::PRESSED: {
+                type.hold(event->button);
+                break;
+            }
+            case kb::Event::ERROR: {
+                std::cerr << "INVALID EVENT!" << std::endl;
+                break;
+            }
         }
     }
+
+    while (true);
 
     return EXIT_SUCCESS;    
 }

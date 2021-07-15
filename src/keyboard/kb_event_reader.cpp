@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 #include <sys/select.h>
+#include <iostream>
 
 #include <cstring>
 
@@ -14,8 +15,8 @@ namespace {
     }
 
     Event ievent_to_event(input_event const & ievent) {
-        Event::Kind kind = ievent.value == 0 ? Event::DOWN
-                            : ievent.value == 1 ? Event::UP
+        Event::Kind kind = ievent.value == 0 ? Event::UP
+                            : ievent.value == 1 ? Event::DOWN
                             : ievent.value == 2 ? Event::PRESSED
                             :                     Event::ERROR;
         return Event{ievent.code, kind};	

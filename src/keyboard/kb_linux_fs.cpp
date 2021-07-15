@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <cstring>
+#include <iostream>
 
 
 namespace kb::linux_filesystem {
