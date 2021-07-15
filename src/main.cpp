@@ -12,19 +12,18 @@ std::optional<kb::event_reader> build_reader_for_all_keyboards() {
     if (keyboards_dss.empty()) {
         return std::nullopt;
     }
-    return kb::event_reader(std::move(keyboards_dss));
+    return std::optional<kb::event_reader>( std::move(keyboards_dss) );
 }
 
 
 int main(){
     snd::SDLRAIIContextManager manager(44100, 7, 1024);
-    auto kb_event_reader = build_reader_for_all_keyboards();
-
     if (!manager) {
         std::cerr << manager.get_error_message() << std::endl;
         return EXIT_FAILURE;
     }
 
+    auto kb_event_reader = build_reader_for_all_keyboards();
     if (!kb_event_reader) {
         std::cerr << "No keyboards found. Make sure you are root." << std::endl;
         return EXIT_FAILURE;
@@ -38,6 +37,7 @@ int main(){
     while (event = kb_event_reader->next()) {
         switch (event->kind) {
             case kb::Event::DOWN: {
+                std::cout << "DOWN!" << std::endl;
                 type.down(event->button);
                 break;
             }

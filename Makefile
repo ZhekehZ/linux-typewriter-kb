@@ -1,21 +1,27 @@
 BUILD_PATH = build
+CXX_FLAGS = -Ofast
+
+OUTPUT_ARCHIVE_NAME = program.zip
+OUTPUT_EXECUTABLE_NAME = run
 
 SOURCES = $$(find src -type f)
 HEADERS = include
-
+LIBS = -lSDL2 -lSDL2_mixer
 
 BUILD_ABS_PATH = $(realpath $(BUILD_PATH))
 GENERATED_ABS_PATH = $(BUILD_ABS_PATH)/generated
 
 ALL_GENERATED_SOURCES = $$(find $(GENERATED_ABS_PATH) -type f)
 
-build_bundle:
-	g++ -std=c++17 $(SOURCES) -I$(HEADERS) -lSDL2 -lSDL2_mixer -Ofast -o $(BUILD_ABS_PATH)/run
-	cp -r assets $(BUILD_ABS_PATH)
+all: build_app build_single_file
 
+build_app:
+	g++ -std=c++17 $(SOURCES) -I$(HEADERS) $(LIBS) $(CXX_FLAGS) -o $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME)
+	cp -r assets $(BUILD_ABS_PATH)
+	cd $(BUILD_ABS_PATH) && zip $(OUTPUT_ARCHIVE_NAME) -r assets $(OUTPUT_EXECUTABLE_NAME)
 
 build_single_file: convert_assets_to_code
-	g++ -std=c++17 $(SOURCES) $(ALL_GENERATED_SOURCES) -I$(HEADERS) -lSDL2 -lSDL2_mixer -Ofast -DINJECT_RESOURCES -o $(BUILD_ABS_PATH)/run
+	g++ -std=c++17 $(SOURCES) $(ALL_GENERATED_SOURCES) -I$(HEADERS) $(LIBS) $(CXX_FLAGS) -DINJECT_RESOURCES -o $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME)
 
 convert_assets_to_code:
 	mkdir -p $(GENERATED_ABS_PATH)
