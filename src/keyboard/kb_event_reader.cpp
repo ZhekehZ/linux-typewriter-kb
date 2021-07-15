@@ -2,7 +2,6 @@
 
 #include <unistd.h>
 #include <sys/select.h>
-#include <iostream>
 
 #include <cstring>
 
