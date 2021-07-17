@@ -3,7 +3,7 @@
 ### Build and run
 
 ```sh 
-    sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
-    make
-    sudo ./build/run
+sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
+make
+sudo ./build/run
 ```
