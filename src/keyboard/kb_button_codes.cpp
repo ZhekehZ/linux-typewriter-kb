@@ -2,7 +2,8 @@
 
 #include <initializer_list>
 
-namespace kb::code {
+namespace kb {
+namespace code {
 
 bool is_enter(int code) {
     return code == ENTER || code == ENTER2;
@@ -19,4 +20,16 @@ bool is_special(int code) {
     return false;
 }
 
-} // namespace kb::code
+} // namespace code
+
+ButtonType code_to_type(int code) {
+    if (code::is_enter(code)) {
+        return ButtonType::ENTER;
+    }
+    if (code::is_special(code)) {
+        return ButtonType::SPECIAL;
+    }
+    return ButtonType::REGULAR;
+}
+
+} // namespace kb

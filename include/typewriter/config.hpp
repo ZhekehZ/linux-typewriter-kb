@@ -1,3 +1,5 @@
+#pragma once
+
 #include "sound/snd_wav_sound.hpp"
 
 const typewriter::TypewriterConfig DEFAULT_CONFIG = {

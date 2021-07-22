@@ -1,5 +1,6 @@
-#include <vector>
+#pragma once
 
+#include <vector>
 
 namespace kb::linux_filesystem {
 

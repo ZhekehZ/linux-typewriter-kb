@@ -1,6 +1,10 @@
+#pragma once
+
 #include <linux/input.h>
 
-namespace kb::code {
+namespace kb {
+
+namespace code {
     
 inline constexpr int ENTER = KEY_ENTER;
 inline constexpr int ENTER2 = KEY_KPENTER;
@@ -18,4 +22,14 @@ bool is_enter(int code);
 
 bool is_special(int code);
 
-} // namespace kb::code
+} // namespace code
+
+enum class ButtonType {
+    REGULAR, 
+    SPECIAL,
+    ENTER
+};
+
+ButtonType code_to_type(int code);
+
+} // namespace kb

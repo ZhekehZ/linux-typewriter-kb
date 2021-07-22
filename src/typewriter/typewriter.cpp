@@ -54,10 +54,13 @@ namespace {
         }
     }
 
-    detail::InnerButtonConfig const & get_btn_cfg(int code, detail::InnerConfig const & cfg) {
-        if (kb::code::is_special(code)) {
+    detail::InnerButtonConfig const & get_btn_cfg(
+        kb::ButtonType type, 
+        detail::InnerConfig const & cfg
+    ) {
+        if (type == kb::ButtonType::SPECIAL) {
             return cfg.special_button;
-        } else if (kb::code::is_enter(code)) {
+        } else if (type == kb::ButtonType::ENTER) {
             return cfg.enter_button;
         } 
         return cfg.regular_button;
@@ -78,22 +81,22 @@ Typewriter::Typewriter(TypewriterConfig const & config) {
     }
 }
 
-void Typewriter::down(int code) {
-    auto const & bcfg = get_btn_cfg(code, config_);
+void Typewriter::down(kb::ButtonType type) {
+    auto const & bcfg = get_btn_cfg(type, config_);
     if (bcfg.down_ids.empty()) return;
     int idx = choose(bcfg.down_ids, bcfg.selector);
     sounds_[idx].play();
 }
 
-void Typewriter::up(int code) {
-    auto const & bcfg = get_btn_cfg(code, config_);
+void Typewriter::up(kb::ButtonType type) {
+    auto const & bcfg = get_btn_cfg(type, config_);
     if (bcfg.up_ids.empty()) return;
     int idx = choose(bcfg.up_ids, bcfg.selector);
     sounds_[idx].play();
 }
 
-void Typewriter::hold(int code) {
-    auto const & bcfg = get_btn_cfg(code, config_);
+void Typewriter::hold(kb::ButtonType type) {
+    auto const & bcfg = get_btn_cfg(type, config_);
     if (bcfg.hold_ids.empty()) return;
     int idx = choose(bcfg.hold_ids, bcfg.selector);
     sounds_[idx].play();

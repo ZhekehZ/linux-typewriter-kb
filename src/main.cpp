@@ -36,26 +36,24 @@ int main(){
     std::optional<kb::Event> event;
     while (event = kb_event_reader->next()) {
         switch (event->kind) {
-            case kb::Event::DOWN: {
-                type.down(event->button);
+            case kb::Event::Kind::DOWN: {
+                type.down(event->type);
                 break;
             }
-            case kb::Event::UP: {
-                type.up(event->button);
+            case kb::Event::Kind::UP: {
+                type.up(event->type);
                 break;
             }
-            case kb::Event::PRESSED: {
-                type.hold(event->button);
+            case kb::Event::Kind::PRESSED: {
+                type.hold(event->type);
                 break;
             }
-            case kb::Event::ERROR: {
+            case kb::Event::Kind::ERROR: {
                 std::cerr << "INVALID EVENT!" << std::endl;
                 break;
             }
         }
     }
-
-    while (true);
 
     return EXIT_SUCCESS;    
 }

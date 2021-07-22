@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sound/snd_wav_sound.hpp"
+#include "keyboard/kb_button_codes.hpp"
 
 #include <vector>
 
@@ -44,11 +45,11 @@ class Typewriter {
 public:
     Typewriter(TypewriterConfig const & config);
 
-    void down(int code);
+    void down(kb::ButtonType type);
 
-    void up(int code);
+    void up(kb::ButtonType type);
 
-    void hold(int code);
+    void hold(kb::ButtonType type);
 
 private:
     std::vector<snd::WAVSound> sounds_;

@@ -14,11 +14,12 @@ namespace {
     }
 
     Event ievent_to_event(input_event const & ievent) {
-        Event::Kind kind = ievent.value == 0 ? Event::UP
-                            : ievent.value == 1 ? Event::DOWN
-                            : ievent.value == 2 ? Event::PRESSED
-                            :                     Event::ERROR;
-        return Event{ievent.code, kind};	
+        Event::Kind kind = ievent.value == 0 ? Event::Kind::UP
+                         : ievent.value == 1 ? Event::Kind::DOWN
+                         : ievent.value == 2 ? Event::Kind::PRESSED
+                         :                     Event::Kind::ERROR;
+        ButtonType type = code_to_type(ievent.code);
+        return Event{type, kind};	
     }
 
     std::optional<input_event> next_ievent(int fd) {

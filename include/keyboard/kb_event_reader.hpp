@@ -1,5 +1,7 @@
 #pragma once
 
+#include "kb_button_codes.hpp"
+
 #include <vector>
 #include <optional>
 
@@ -9,11 +11,11 @@
 namespace kb {
 
 struct Event {
-    enum Kind {
+    enum class Kind {
         DOWN, UP, PRESSED, ERROR
     };
 
-    int button;
+    ButtonType type;
     Kind kind;
 };
 
