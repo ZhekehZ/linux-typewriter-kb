@@ -4,6 +4,7 @@
 
 ```sh 
 sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
+<<<<<<< HEAD
 make app
 sudo ./build/run
 ```
@@ -12,3 +13,8 @@ sudo ./build/run
 make separate
 sudo ./build/kb_read | ./build/tw_snd
 ```
+=======
+make
+sudo ./build/run
+```
+>>>>>>> f6457f03f580f0a187c248195db5ccab955f1cd6
