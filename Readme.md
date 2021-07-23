@@ -1,6 +1,6 @@
 ## Linux typewriter-sound keyboard 
 
-### Prerequirements
+### Prerequirements (only for build)
 
 ```sh 
 sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
@@ -8,12 +8,12 @@ sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
 
 ### Building and installing .deb package
 ```sh
-make deb
+make deb # or just download existing one
 sudo apt install ./build/typewriter_keyboard.deb
 ```
 
 ### Help
-```sh
+```
     typewriter-kb start         -- start typewriter 
     typewriter-kb stop          -- stop typewriter
     typewriter-kb [OPTION]      -- configure typewriter
