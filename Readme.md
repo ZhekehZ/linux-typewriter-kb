@@ -12,15 +12,14 @@ make deb
 sudo apt install ./build/typewriter_keyboard.deb
 ```
 
-### Usage
+### Help
 ```sh
-$ typewriter-kb  # Default volume is 0
-[sudo] password for user:
-Start in background
+    typewriter-kb start         -- start typewriter 
+    typewriter-kb stop          -- stop typewriter
+    typewriter-kb [OPTION]      -- configure typewriter
 
-$ typewriter-kb-config setvolume 10
-Setting volume to 10%
-
-$ typewriter-kb-config shutdown    
-Shutting down
+Options:
+    -h, --help                show this help
+    -s, --setvolume [VALUE]   set typewriter volume (from 0 to 100)
+    -g, --getvolume           returns current typewriter volume
 ```
