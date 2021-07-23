@@ -31,9 +31,6 @@ ALL_GENERATED_SOURCES = $$(find $(GENERATED_ABS_PATH) -type f)
 DEB_PATH = $(BUILD_ABS_PATH)/$(DEB_PACKAGE_NAME)
 DEB_PKG_SIZE = "$$( du -ck $(DEB_PATH) | tail -1 | cut -f1 )"
 
-GIT_USERNAME = $$(git config user.name)
-GIT_EMAIL = $$(git config user.email)
-
 all: zip app separate tw_config deb
 
 zip:
@@ -103,10 +100,10 @@ deb: separate tw_config
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER) $(DEB_PATH)/opt/typewriter_keyboard
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_CONFIG) $(DEB_PATH)/opt/typewriter_keyboard
 	cp $(BUILD_ABS_PATH)/run_separate.sh $(DEB_PATH)/opt/typewriter_keyboard
-	cat scripts/deb/DEBIAN/control                  |\
-		sed "s/@APP_SIZE@/$(DEB_PKG_SIZE)/g"        |\
-		sed "s/@MAINTAINER_NAME@/$(GIT_USERNAME)/g" |\
-		sed "s/@MAINTAINER_EMAIL@/$(GIT_EMAIL)/g"   > $(DEB_PATH)/DEBIAN/control
+	sh scripts/generate_control_script.sh $(DEB_PKG_SIZE)         \
+		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_CONFIG)     \
+		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER)     \
+		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER) > $(DEB_PATH)/DEBIAN/control 
 	chmod 775 $(DEB_PATH)/DEBIAN/prerm
 	cd $(BUILD_ABS_PATH) && dpkg-deb --build ./$(DEB_PACKAGE_NAME)
 

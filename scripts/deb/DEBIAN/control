@@ -2,7 +2,7 @@ Package: typewriter-keyboard
 Version: 0.1-alpha
 Section: unknown
 Priority: optional
-Depends: libc6, libstdc++6, libgcc-s1
+Depends: @DEPENDENCIES@
 Architecture: amd64
 Essential: no
 Installed-Size: @APP_SIZE@
