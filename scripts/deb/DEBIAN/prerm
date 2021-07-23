@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo 'Stopping typewriter if necessary ...'
+typewriter-kb stop

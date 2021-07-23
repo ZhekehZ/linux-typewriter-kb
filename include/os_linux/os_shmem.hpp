@@ -27,7 +27,14 @@ int get_page_keys(StorageAccessMode mode);
 template <typename StorageT>
 class SharedStorage {
 public:
-    SharedStorage(const char * name, bool owner, StorageAccessMode mode)
+
+    template <typename ... Args>
+    SharedStorage(
+        const char * name, 
+        bool owner, 
+        StorageAccessMode mode,
+        Args && ... args
+    )
         : owner_(owner)
         , name_(name) 
     {
@@ -42,6 +49,8 @@ public:
         }
 
         data_ = mmap(0, sizeof(StorageT), detail::get_page_keys(mode), MAP_SHARED, fd_, 0);
+
+        new (data_) StorageT(std::forward<Args>(args) ...);
     }
 
     StorageT & get() {

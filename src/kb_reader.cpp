@@ -23,7 +23,7 @@ int main() {
     std::ios_base::sync_with_stdio(false);
 
     if (auto kb_reader = build_reader_for_all_keyboards(); kb_reader) {
-        
+    
         std::optional<kb::Event> event;
         while (event = kb_reader->next()) {
             send(*event);

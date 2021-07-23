@@ -34,7 +34,7 @@ DEB_PKG_SIZE = "$$( du -ck $(DEB_PATH) | tail -1 | cut -f1 )"
 GIT_USERNAME = $$(git config user.name)
 GIT_EMAIL = $$(git config user.email)
 
-all: zip app separate tw_config
+all: zip app separate tw_config deb
 
 zip:
 	mkdir -p $(BUILD_PATH)
@@ -107,6 +107,7 @@ deb: separate tw_config
 		sed "s/@APP_SIZE@/$(DEB_PKG_SIZE)/g"        |\
 		sed "s/@MAINTAINER_NAME@/$(GIT_USERNAME)/g" |\
 		sed "s/@MAINTAINER_EMAIL@/$(GIT_EMAIL)/g"   > $(DEB_PATH)/DEBIAN/control
+	chmod 775 $(DEB_PATH)/DEBIAN/prerm
 	cd $(BUILD_ABS_PATH) && dpkg-deb --build ./$(DEB_PACKAGE_NAME)
 
 

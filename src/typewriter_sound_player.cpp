@@ -17,11 +17,11 @@ bool can_recv() {
     return std::cin.operator bool();
 }
 
-int main() {
+int main() try {
     std::cin.tie(nullptr);
     std::cout.tie(nullptr);
     std::ios_base::sync_with_stdio(false);
-    
+
     snd::SDLRAIIContextManager manager(44100, 7, 1024);
     if (!manager) {
         std::cerr << manager.get_error_message() << std::endl;
@@ -58,4 +58,9 @@ int main() {
             }
         }
     }
+    
+} catch(...) {
+    std::cerr << "Unexpected error. " << std::endl
+              << "The application may already be running." << std::endl;
+    return EXIT_FAILURE;
 }

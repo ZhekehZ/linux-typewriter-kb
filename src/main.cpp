@@ -18,7 +18,7 @@ std::optional<kb::event_reader> build_reader_for_all_keyboards() {
 }
 
 
-int main(){
+int main() try {
     snd::SDLRAIIContextManager manager(44100, 7, 1024);
     if (!manager) {
         std::cerr << manager.get_error_message() << std::endl;
@@ -65,4 +65,8 @@ int main(){
     }
 
     return EXIT_SUCCESS;    
+} catch(...) {
+    std::cerr << "Unexpected error. " << std::endl
+              << "The application may already be running." << std::endl;
+    return EXIT_FAILURE;
 }

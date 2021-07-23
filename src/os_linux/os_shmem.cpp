@@ -3,7 +3,7 @@
 namespace os::detail {
 
 int get_open_keys(bool owner, StorageAccessMode mode) {
-    return static_cast<int>(mode) | O_CREAT; // | (owner ? O_EXCL : 0);
+    return static_cast<int>(mode) | (owner ? O_EXCL | O_CREAT : 0);
 }
 
 int get_page_keys(StorageAccessMode mode) {
