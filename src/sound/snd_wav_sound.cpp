@@ -33,6 +33,9 @@ void WAVSound::play() {
     Mix_PlayChannel(-1, chunk_.get(), 0);
 }
 
+void WAVSound::set_volume(int value) {
+    Mix_VolumeChunk(chunk_.get(), value);
+}
 
 
 } // namespace snd

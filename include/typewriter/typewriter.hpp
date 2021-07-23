@@ -43,7 +43,13 @@ namespace detail {
 
 class Typewriter {
 public:
-    Typewriter(TypewriterConfig const & config);
+    Typewriter(
+        TypewriterConfig const & config, 
+        int default_volume
+    );
+
+    int get_volume();
+    void set_volume(int value);
 
     void down(kb::ButtonType type);
 
@@ -54,6 +60,7 @@ public:
 private:
     std::vector<snd::WAVSound> sounds_;
     detail::InnerConfig config_;
+    int volume_;
 };
 
 } // namespace typewriter

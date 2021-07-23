@@ -1,14 +1,16 @@
 #include <iostream>
 
 #include "keyboard/kb_event_reader.hpp"
-#include "keyboard/kb_linux_fs.hpp"
+#include "os_linux/os_fs_get_keyboards.hpp"
 #include "sound/snd_sdl_mixer.hpp"
 
 #include "typewriter/typewriter.hpp"
 #include "typewriter/config.hpp"
 
+#include "utils/utils.hpp"
+
 std::optional<kb::event_reader> build_reader_for_all_keyboards() {
-    auto keyboards_dss = kb::linux_filesystem::open_and_get_all_keyboards();
+    auto keyboards_dss = os::filesystem::open_and_get_all_keyboards();
     if (keyboards_dss.empty()) {
         return std::nullopt;
     }
@@ -29,12 +31,19 @@ int main(){
         return EXIT_FAILURE;
     }
 
-    typewriter::Typewriter type(DEFAULT_CONFIG);
+    typewriter::Typewriter type(DEFAULT_CONFIG, 50);
+
+    utils::AppConfig appConfig(utils::CONFIG_MEM_NAME, true, os::StorageAccessMode::R);
+    auto & [opt_volume, opt_exit] = appConfig.get();
 
     std::cout << "SUCCESSFULLY INITIALIZED" << std::endl;
 
     std::optional<kb::Event> event;
-    while (event = kb_event_reader->next()) {
+    while (!opt_exit && (event = kb_event_reader->next())) {
+        if (type.get_volume() != opt_volume) {
+            type.set_volume(opt_volume);
+        }
+
         switch (event->kind) {
             case kb::Event::Kind::DOWN: {
                 type.down(event->type);

@@ -1,14 +1,26 @@
-## linux typewriter-sound keyboard 
+## Linux typewriter-sound keyboard 
 
-### Build and run
+### Prerequirements
 
 ```sh 
 sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
-make app
-sudo ./build/run
 ```
-*__Note__* : if you cannot play sound as a superuser, you can assemble the parts of the application separately and run as follows:  
+
+### Building and installing .deb package
+```sh
+make deb
+sudo apt install ./build/typewriter_keyboard.deb
 ```
-make separate
-sudo ./build/kb_read | ./build/tw_snd
+
+### Usage
+```sh
+$ typewriter-kb  # Default volume is 0
+[sudo] password for user:
+Start in background
+
+$ typewriter-kb-config setvolume 10
+Setting volume to 10%
+
+$ typewriter-kb-config shutdown    
+Shutting down
 ```

@@ -48,6 +48,8 @@ public:
 
     WAVSound(std::string const & filename, int volume);
 
+    void set_volume(int value);
+
 private:
     std::unique_ptr<Mix_Chunk, void (*)(Mix_Chunk *)> chunk_;
 

@@ -1,0 +1,10 @@
+Package: typewriter-keyboard
+Version: 0.2
+Section: unknown
+Priority: optional
+Depends: libc6, libstdc++6, libgcc-s1
+Architecture: amd64
+Essential: no
+Installed-Size: @APP_SIZE@
+Maintainer: @MAINTAINER_NAME@ <@MAINTAINER_EMAIL@>
+Description: Typewriter sounds for keyboard

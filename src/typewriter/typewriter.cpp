@@ -25,9 +25,11 @@ namespace {
         }
     }
 
-    void load(ButtonConfig const & btnCfg, 
-              detail::InnerButtonConfig & cfg, 
-              std::map<std::string, int> & loaded) {
+    void load(
+        ButtonConfig const & btnCfg, 
+        detail::InnerButtonConfig & cfg, 
+        std::map<std::string, int> & loaded
+    ) {
         load(btnCfg.down_sounds, cfg.down_ids, loaded);
         load(btnCfg.up_sounds, cfg.up_ids, loaded);
         load(btnCfg.hold_sounds, cfg.hold_ids, loaded);
@@ -68,7 +70,10 @@ namespace {
 
 } // namespace
 
-Typewriter::Typewriter(TypewriterConfig const & config) {
+Typewriter::Typewriter(
+    TypewriterConfig const & config, 
+    int default_volume
+) : volume_(default_volume) {
     std::map<std::string, int> loaded;
 
     load(config.regular_button, config_.regular_button, loaded);
@@ -77,7 +82,7 @@ Typewriter::Typewriter(TypewriterConfig const & config) {
 
     sounds_.reserve(loaded.size());
     for (auto const & sound_name : inverse(loaded)) {
-        sounds_.emplace_back(sound_name, 50);
+        sounds_.emplace_back(sound_name, volume_);
     }
 }
 
@@ -100,6 +105,17 @@ void Typewriter::hold(kb::ButtonType type) {
     if (bcfg.hold_ids.empty()) return;
     int idx = choose(bcfg.hold_ids, bcfg.selector);
     sounds_[idx].play();
+}
+
+int Typewriter::get_volume() {
+    return volume_;
+}
+
+void Typewriter::set_volume(int value) {
+    for (auto & sound : sounds_) {
+        sound.set_volume(value);
+    }
+    volume_ = value;
 }
 
 } // namespace typewriter

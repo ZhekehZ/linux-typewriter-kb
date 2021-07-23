@@ -1,10 +1,10 @@
 #include <iostream>
 
 #include "keyboard/kb_event_reader.hpp"
-#include "keyboard/kb_linux_fs.hpp"
+#include "os_linux/os_fs_get_keyboards.hpp"
 
 std::optional<kb::event_reader> build_reader_for_all_keyboards() {
-    auto keyboards_dss = kb::linux_filesystem::open_and_get_all_keyboards();
+    auto keyboards_dss = os::filesystem::open_and_get_all_keyboards();
     if (keyboards_dss.empty()) {
         return std::nullopt;
     }
@@ -18,6 +18,10 @@ void send(kb::Event const & event) {
 }
 
 int main() {
+    std::cin.tie(nullptr);
+    std::cout.tie(nullptr);
+    std::ios_base::sync_with_stdio(false);
+
     if (auto kb_reader = build_reader_for_all_keyboards(); kb_reader) {
         
         std::optional<kb::Event> event;
