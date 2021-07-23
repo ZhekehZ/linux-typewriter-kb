@@ -1,5 +1,5 @@
 Package: typewriter-keyboard
-Version: 0.2
+Version: 0.1-alpha
 Section: unknown
 Priority: optional
 Depends: libc6, libstdc++6, libgcc-s1

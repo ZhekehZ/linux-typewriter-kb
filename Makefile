@@ -108,3 +108,7 @@ deb: separate tw_config
 		sed "s/@MAINTAINER_NAME@/$(GIT_USERNAME)/g" |\
 		sed "s/@MAINTAINER_EMAIL@/$(GIT_EMAIL)/g"   > $(DEB_PATH)/DEBIAN/control
 	cd $(BUILD_ABS_PATH) && dpkg-deb --build ./$(DEB_PACKAGE_NAME)
+
+
+clean:
+	rm -rf $(BUILD_ABS_PATH)
