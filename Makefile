@@ -29,7 +29,6 @@ GENERATED_ABS_PATH = $(BUILD_ABS_PATH)/generated
 ALL_GENERATED_SOURCES = $$(find $(GENERATED_ABS_PATH) -type f)
 
 DEB_PATH = $(BUILD_ABS_PATH)/$(DEB_PACKAGE_NAME)
-DEB_PKG_SIZE = "$$( du -ck $(DEB_PATH) | tail -1 | cut -f1 )"
 
 all: zip app separate tw_config deb
 
@@ -100,7 +99,7 @@ deb: separate tw_config
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER) $(DEB_PATH)/opt/typewriter_keyboard
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_CONFIG) $(DEB_PATH)/opt/typewriter_keyboard
 	cp $(BUILD_ABS_PATH)/run_separate.sh $(DEB_PATH)/opt/typewriter_keyboard
-	sh scripts/generate_control_script.sh $(DEB_PKG_SIZE)         \
+	sh scripts/generate_control_script.sh $(DEB_PATH)             \
 		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_CONFIG)     \
 		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER)     \
 		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER) > $(DEB_PATH)/DEBIAN/control 

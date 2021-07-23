@@ -1,9 +1,11 @@
 #!/bin/sh
 
-DEB_PKG_SIZE="$1" && shift
-DEPS=""
+DEB_PKG_SRC_PATH="$1" && shift
+EXECS="$*"
 
-for app in "$@"
+DEB_PKG_SIZE="$( du -ck "${DEB_PKG_SRC_PATH}" | tail -1 | cut -f1 )"
+
+for app in $EXECS
 do
     LIBS="$( objdump -p "$app"           \
            | grep NEEDED                 \
