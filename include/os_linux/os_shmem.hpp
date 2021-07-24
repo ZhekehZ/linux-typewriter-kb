@@ -50,7 +50,9 @@ public:
 
         data_ = mmap(0, sizeof(StorageT), detail::get_page_keys(mode), MAP_SHARED, fd_, 0);
 
-        new (data_) StorageT(std::forward<Args>(args) ...);
+        if (owner) {
+            new (data_) StorageT(std::forward<Args>(args) ...);
+        }
     }
 
     StorageT & get() {

@@ -24,7 +24,7 @@ int setvolume(int argc, char const ** argv, int & opt_volume, bool & opt_exit) {
 }
 
 int getvolume(int argc, char const ** argv, int & opt_volume, bool & opt_exit) {
-    std::cout << "Current volume is " << opt_volume << "%" << std::endl;
+    std::cout << "Current volume is " << static_cast<int>(opt_volume / 1.28) << "%" << std::endl;
     return EXIT_SUCCESS;
 }
 
