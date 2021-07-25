@@ -8,8 +8,14 @@ TW_CONFIG='<to eval>'
 call_start()
 {
     check_root
-    sudo echo "Running in background ..."
-    sudo "$KB_READ" | "$TW_SND" &
+    if [ "$1" = true ]
+    then
+        pkexec "$KB_READ" | "$TW_SND" &
+    else
+        sudo echo "Running in background ..."
+        sudo "$KB_READ" | "$TW_SND" &
+    fi
+
 }
 
 call_setvolume()
@@ -40,6 +46,8 @@ Options:
     -h, --help                show this help
     -s, --setvolume [VALUE]   set typewriter volume (from 0 to 100)
     -g, --getvolume           returns current typewriter volume 
+ 
+    --gnome                   use gnome auth dialogue
 "
     echo "$HELP"
 }
@@ -70,12 +78,13 @@ evaluate_dirs
 
 mode= # start/stop/setvolume/getvolume
 value= # volume for setvolume mode
+selected_mods=0
+use_gnome=false
 
 assert_call_is_valid()
 {
-    if [ -z "$mode" ] || 
-       [ "$mode" = "setvolume" ] && [ -z "$value" ] || 
-       [ -n "$1" ]
+    if [ "$mode" = "setvolume" ] && [ -z "$value" ] || 
+       [ -n "$1" ] || [ "$selected_mods" -ne 1 ]
     then
         echo "Invalid call" 
         display_help
@@ -83,7 +92,7 @@ assert_call_is_valid()
     fi
 }
 
-while [ -n "$1" ] && [ -z "$mode" ]
+while [ -n "$1" ]
 do
     case "$1" in
         -h|--help)
@@ -92,17 +101,24 @@ do
             ;;
         start)
             mode=start
+            selected_mods=$(( selected_mods + 1 ))
             ;;
         stop)
             mode=stop
+            selected_mods=$(( selected_mods + 1 ))
             ;;
         -s|--setvolume)
             value="$2"
             mode=setvolume
             shift
+            selected_mods=$(( selected_mods + 1 ))
             ;;
         -g|--getvolume)
             mode=getvolume
+            selected_mods=$(( selected_mods + 1 ))
+            ;;
+        --gnome)
+            use_gnome=true
             ;;
         *) 
             echo "Invalid option: \`$1\`"
@@ -117,7 +133,7 @@ assert_call_is_valid "$1"
 
 
 case "$mode" in
-    start)     call_start
+    start)     call_start "$use_gnome"
                ;;
     stop)      call_stop 
                ;;

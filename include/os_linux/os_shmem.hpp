@@ -60,6 +60,7 @@ public:
     }
 
     ~SharedStorage() {
+        get().~StorageT();
         munmap(data_, sizeof(StorageT));
         close(fd_); 
         if (owner_) {

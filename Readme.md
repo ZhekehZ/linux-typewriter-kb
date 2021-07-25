@@ -14,7 +14,7 @@ sudo apt install ./build/typewriter_keyboard.deb
 
 ### Help
 ```
-Usage:
+Usage: 
     typewriter-kb start         -- start typewriter 
     typewriter-kb stop          -- stop typewriter
     typewriter-kb [OPTION]      -- configure typewriter
@@ -22,12 +22,15 @@ Usage:
 Options:
     -h, --help                show this help
     -s, --setvolume [VALUE]   set typewriter volume (from 0 to 100)
-    -g, --getvolume           returns current typewriter volume
+    -g, --getvolume           returns current typewriter volume 
+ 
+    --gnome                   use gnome auth dialogue
 ```
 
 ### Experimental: gnome extension installation
-1. install extension
+0. Install .deb package
+1. Install extension
     ```sh
-    ln -s $( pwd )/typewriter-kb@zzzheka97.gmail.com ~/.local/share/gnome-shell/extensions/
+    ln -s "$( pwd )/typewriter-kb@zzzheka97.gmail.com" ~/.local/share/gnome-shell/extensions/
     ```
 2. Restart gnome: `Alt+F2` and then `r`
