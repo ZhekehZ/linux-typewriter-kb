@@ -34,3 +34,5 @@ Options:
     ln -s "$( pwd )/typewriter-kb@zzzheka97.gmail.com" ~/.local/share/gnome-shell/extensions/
     ```
 2. Restart gnome: `Alt+F2` and then `r`
+3. Change volume with the bottom slider  
+![image](https://user-images.githubusercontent.com/14273096/126871481-0bacf5b9-c6c5-40c4-bca8-632bd525e4e6.png)
