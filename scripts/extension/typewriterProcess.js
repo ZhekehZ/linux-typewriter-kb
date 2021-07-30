@@ -38,7 +38,7 @@ class TypewriterProcess {
     }
     
     _onProcessStarted(name, success, pid) {
-        log('[Typewriter-kb]  Starting kb_read process: ' + success + ', pid = ' + pid);
+        log('[Typewriter-kb]  Starting ' + name + ' process: ' + success + ', pid = ' + pid);
                 
         if (!success) return;
         

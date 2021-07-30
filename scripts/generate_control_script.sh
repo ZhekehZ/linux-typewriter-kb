@@ -1,7 +1,9 @@
 #!/bin/sh
 
 DEB_PKG_SRC_PATH="$1" && shift
-VERSION="$1" && shift
+VERSION="$1"          && shift
+MAINTAINER_NAME="$1"  && shift
+MAINTAINER_EMAIL="$1" && shift
 EXECS="$*"
 
 DEB_PKG_SIZE="$( du -ck "${DEB_PKG_SRC_PATH}" | tail -1 | cut -f1 )"
@@ -27,6 +29,6 @@ DEPS="$( printf "$DEPS" | sort -u | sed -zE 's/\n([^$])/, \1/g' )"
 
 sed "s/@VERSION@/${VERSION}/g" < "$( dirname "$0" )/deb/DEBIAN/control" |\
 sed "s/@APP_SIZE@/${DEB_PKG_SIZE}/g"                                    |\
-sed "s/@MAINTAINER_NAME@/$( git config user.name )/g"                   |\
+sed "s/@MAINTAINER_NAME@/${MAINTAINER_NAME}/g"                          |\
 sed "s/@DEPENDENCIES@/${DEPS}/g"                                        |\
-sed "s/@MAINTAINER_EMAIL@/$( git config user.email )/g"  
+sed "s/@MAINTAINER_EMAIL@/${MAINTAINER_EMAIL}/g"  

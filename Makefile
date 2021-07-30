@@ -3,11 +3,14 @@ VERSION=0.2-alpha
 BUILD_PATH = build
 CXX_FLAGS = -std=c++17 -Ofast
 
+MAINTAINER_NAME = zhekehz
+MAINTAINER_EMAIL = zzzheka97@gmail.com
+
 OUTPUT_EXECUTABLE_NAME_KB_READER = kb_read
 OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER = tw_snd
 
 DEB_PACKAGE_NAME = typewriter_keyboard
-GNOME_EXTENSION_NAME = $$(scripts/get_extension_name.sh)
+GNOME_EXTENSION_NAME = "typewriter-kb@$$( echo $(MAINTAINER_EMAIL) | tr '@' '.' )"
 
 SOURCES_OS = $(wildcard src/os_linux/*.cpp)
 SOURCES_KB = $(wildcard src/keyboard/*.cpp)
@@ -31,7 +34,7 @@ all: deb gnome-extension
 
 separate: kb_reader sound_player
 	cp scripts/run_separate.sh $(BUILD_ABS_PATH)/
-	chmod +x $(BUILD_ABS_PATH)/run_separate.sh
+	chmod 777 $(BUILD_ABS_PATH)/run_separate.sh
 
 kb_reader:
 	mkdir -p $(BUILD_ABS_PATH)
@@ -65,8 +68,9 @@ deb: separate
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER) $(DEB_PATH)/opt/typewriter_keyboard
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER) $(DEB_PATH)/opt/typewriter_keyboard
 	cp $(BUILD_ABS_PATH)/run_separate.sh $(DEB_PATH)/opt/typewriter_keyboard
-	sh scripts/generate_control_script.sh $(DEB_PATH) $(VERSION)  \
-		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER)     \
+	sh scripts/generate_control_script.sh                              \
+		$(DEB_PATH) $(VERSION) $(MAINTAINER_NAME) $(MAINTAINER_EMAIL)  \
+		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER)          \
 		$(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER) > $(DEB_PATH)/DEBIAN/control 
 	chmod 775 $(DEB_PATH)/DEBIAN/prerm
 	cd $(BUILD_ABS_PATH) && dpkg-deb --build ./$(DEB_PACKAGE_NAME)
@@ -76,7 +80,9 @@ gnome-extension: separate
 	cp -r scripts/extension/* $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER) $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/
 	cp $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER) $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/
-	zip -jD "$(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME).zip" $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/*
+	chmod +x $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/$(OUTPUT_EXECUTABLE_NAME_KB_READER)
+	chmod +x $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER)
+	cd $(BUILD_ABS_PATH) && zip -jD "$(GNOME_EXTENSION_NAME).zip" $(GNOME_EXTENSION_NAME)/*
 
 
 clean:

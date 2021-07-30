@@ -12,6 +12,15 @@ make deb # or just download existing one
 sudo apt install ./build/typewriter_keyboard.deb
 ```
 
+### Building and installing gnome extension
+```sh
+make gnome-extension # or just download existing one
+ln -s "$( pwd )"/build/typewriter-*.com ~/.local/share/gnome-shell/extensions/ # or extract .zip archive 
+
+# Restart gnome: `Alt+F2` and then `r`
+# Enable extension via https://extensions.gnome.org/local/
+```
+
 ### Help
 ```
 Usage: 
@@ -27,12 +36,5 @@ Options:
     --gnome                   use gnome auth dialogue
 ```
 
-### Experimental: gnome extension installation
-0. Install .deb package
-1. Install extension
-    ```sh
-    ln -s "$( pwd )/typewriter-kb@zzzheka97.gmail.com" ~/.local/share/gnome-shell/extensions/
-    ```
-2. Restart gnome: `Alt+F2` and then `r`
-3. Change volume with the bottom slider  
-![image](https://user-images.githubusercontent.com/14273096/126871481-0bacf5b9-c6c5-40c4-bca8-632bd525e4e6.png)
+### Extension UI
+
