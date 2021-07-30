@@ -7,14 +7,16 @@ const Slider = imports.ui.slider;
 
 var Indicator = GObject.registerClass(
     class Indicator extends PanelMenu.SystemIndicator {
-        _init() {
+        _init(output) {
             super._init();
-            
+
+            this._output = output;
+            this._lastUpdate = 0;
             this._item = new PopupMenu.PopupBaseMenuItem({ activate: false });
             this.menu.addMenuItem(this._item);
     
-            this._slider = new Slider.Slider(0);
-            this._sliderChangedId = this._slider.connect('drag-end',
+            this._slider = new Slider.Slider(0.5);
+            this._sliderChangedId = this._slider.connect('notify::value',
                 this._sliderChanged.bind(this));
             this._slider.accessible_name = _("Typewriter keyboard volume");
     
@@ -36,11 +38,17 @@ var Indicator = GObject.registerClass(
         }
     
         _sliderChanged() {
-            let percent = Math.floor(this._slider.value * 100);
-            GLib.spawn_command_line_async('/opt/typewriter_keyboard/tw_config setvolume ' + percent);
+            let currentTime = Date.now();
+            let delta = currentTime - this._lastUpdate;
+            if (0 <= currentTime && currentTime < 200) {
+                return;
+            } 
 
-            C.open(0, true);
-            GLib.spawn_command_line_async('firefox');
+            this._lastUpdate = currentTime;
+            let percent = Math.floor(this._slider.value * 100);
+            let status, bytes_written;
+            [status, bytes_written] = this._output.write_all('v' + percent + '\n', null);
+            this._output.flush(null);
         }
     
         _changeSlider(value) {

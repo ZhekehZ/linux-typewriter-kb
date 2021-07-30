@@ -10,6 +10,7 @@ kb::Event recv() {
     kb::Event event;
     std::cin.read(reinterpret_cast<char *>(&event.type), sizeof(event.type));
     std::cin.read(reinterpret_cast<char *>(&event.kind), sizeof(event.kind));
+    std::cin.read(reinterpret_cast<char *>(&event.value), sizeof(event.value));
     return event;
 }
 
@@ -30,15 +31,9 @@ int main() try {
 
     typewriter::Typewriter type(DEFAULT_CONFIG, 50);
 
-    utils::AppConfig optionsStorage(utils::CONFIG_MEM_NAME, true, os::StorageAccessMode::RW);
-    auto & [opt_volume, opt_exit] = optionsStorage.get();
-
-    while (can_recv() && !opt_exit) {
-        if (opt_volume != type.get_volume()) {
-            type.set_volume(opt_volume);
-        }
-
+    while (can_recv()) {
         auto event = recv();
+
         switch (event.kind) {
             case kb::Event::Kind::DOWN: {
                 type.down(event.type);
@@ -50,6 +45,13 @@ int main() try {
             }
             case kb::Event::Kind::PRESSED: {
                 type.hold(event.type);
+                break;
+            }
+            case kb::Event::Kind::EXIT: {
+                return EXIT_SUCCESS;
+            }
+            case kb::Event::Kind::SET_VOLUME: {
+                type.set_volume(event.value);
                 break;
             }
             case kb::Event::Kind::ERROR: {

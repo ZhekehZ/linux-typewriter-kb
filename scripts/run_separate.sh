@@ -1,38 +1,6 @@
 #!/bin/sh
 
 FILENAME=$( basename "$0" )
-KB_READ='<to eval>'
-TW_SND='<to eval>'
-TW_CONFIG='<to eval>'
-
-call_start()
-{
-    check_root
-    if [ "$1" = true ]
-    then
-        pkexec "$KB_READ" | "$TW_SND" &
-    else
-        sudo echo "Running in background ..."
-        sudo "$KB_READ" | "$TW_SND" &
-    fi
-
-}
-
-call_setvolume()
-{
-    $TW_CONFIG setvolume "$1"
-}
-
-call_getvolume()
-{
-    $TW_CONFIG getvolume
-}
-
-call_stop()
-{
-    $TW_CONFIG shutdown
-}
-
 
 display_help()
 {
@@ -52,6 +20,84 @@ Options:
     echo "$HELP"
 }
 
+KB_READ='<to eval>'
+TW_SND='<to eval>'
+
+TW_CONFIG=/tmp/typewriter.config
+
+
+read_with_redirected_input()
+{
+    exec 3<> $TW_CONFIG 
+    echo 'v50' > $TW_CONFIG
+    
+    if [ "$1" = true ]
+    then
+        pkexec "$KB_READ" <&3 | "$TW_SND"
+    else
+        sudo "$KB_READ" <&3 | "$TW_SND"
+    fi
+
+    exec 3>&-
+    rm $TW_CONFIG
+}
+
+call_start()
+{
+    check_root
+    if [ -f $TW_CONFIG ]
+    then
+        echo 'Typewriter already running'
+        exit 1
+    else 
+        if [ "$1" = false ]
+        then
+            sudo echo "Running in background ..."
+        fi
+        read_with_redirected_input "$1" | "$TW_SND" &
+    fi
+}
+
+call_setvolume()
+{
+    value=0
+    if [ "$1" -gt 100 ] 
+    then
+        value=100
+    else
+        value="$1"
+    fi
+
+    if [ -f $TW_CONFIG ]
+    then 
+        echo "v$value" >> $TW_CONFIG
+    else
+        echo 'Start typewriter-kb first'
+    fi
+}
+
+call_getvolume()
+{
+    if [ -f $TW_CONFIG ]
+    then 
+        percent="$( tail -1 $TW_CONFIG | sed -E 's/v([0-9]+)/\1/g' )"
+        echo "Current volume is ${percent}%"
+    else
+        echo 'Start typewriter-kb first'
+    fi
+    
+}
+
+call_stop()
+{
+    if [ -f $TW_CONFIG ]
+    then 
+        echo "exit" >> $TW_CONFIG
+    else
+        echo 'Start typewriter-kb first'
+    fi
+}
+
 evaluate_dirs()
 {
     SCRIPT_DIR=$( dirname "$0" )
@@ -62,7 +108,6 @@ evaluate_dirs()
 
     KB_READ="${SCRIPT_DIR}/kb_read"
     TW_SND="${SCRIPT_DIR}/tw_snd"
-    TW_CONFIG="${SCRIPT_DIR}/tw_config"
 }
 
 check_root()

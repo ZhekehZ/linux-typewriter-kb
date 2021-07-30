@@ -1,5 +1,5 @@
 Package: typewriter-keyboard
-Version: 0.1-alpha
+Version: @VERSION@
 Section: unknown
 Priority: optional
 Depends: @DEPENDENCIES@

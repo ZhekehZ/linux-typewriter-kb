@@ -4,7 +4,7 @@
 
 namespace utils {
 
-constexpr char CONFIG_MEM_NAME[] = "/typewriterconfigmemory";
+constexpr char CONFIG_MEM_NAME[] = "/typewriter-kb_config_memory_2";
 constexpr int DEFAULT_VOLUME = 50;
 
 struct AppConfigValues { 

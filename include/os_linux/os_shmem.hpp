@@ -60,12 +60,14 @@ public:
     }
 
     ~SharedStorage() {
-        get().~StorageT();
+        if (owner_) {
+            get().~StorageT();
+        }
         munmap(data_, sizeof(StorageT));
-        close(fd_); 
         if (owner_) {
             shm_unlink(name_);
         }
+        close(fd_); 
     }
 
 private:

@@ -27,7 +27,8 @@ bool is_special(int code);
 enum class ButtonType {
     REGULAR, 
     SPECIAL,
-    ENTER
+    ENTER,
+    NONE
 };
 
 ButtonType code_to_type(int code);

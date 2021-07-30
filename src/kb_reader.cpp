@@ -14,6 +14,7 @@ std::optional<kb::event_reader> build_reader_for_all_keyboards() {
 void send(kb::Event const & event) {
     std::cout.write(reinterpret_cast<const char *>(&event.type), sizeof(event.type));
     std::cout.write(reinterpret_cast<const char *>(&event.kind), sizeof(event.kind));
+    std::cout.write(reinterpret_cast<const char *>(&event.value), sizeof(event.value));
     std::cout.flush();
 }
 
@@ -27,6 +28,9 @@ int main() {
         std::optional<kb::Event> event;
         while (event = kb_reader->next()) {
             send(*event);
+            if (event->kind == kb::Event::Kind::EXIT) {
+                break;
+            }
         }
 
     } else {

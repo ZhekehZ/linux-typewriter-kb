@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <optional>
+#include <utility>
 
 #include <linux/input.h>
 
@@ -12,11 +13,14 @@ namespace kb {
 
 struct Event {
     enum class Kind {
-        DOWN, UP, PRESSED, ERROR
+        DOWN, UP, PRESSED, 
+        EXIT, SET_VOLUME,
+        ERROR
     };
 
     ButtonType type;
     Kind kind;
+    int value;
 };
 
 class event_reader {
@@ -30,7 +34,7 @@ public:
 private:
     void make_fd_set(fd_set & fds);
 
-    std::vector<int> read_ds_;
+    std::vector<std::pair<int, bool>> read_ds_;
     int max_ds_;
 };
 

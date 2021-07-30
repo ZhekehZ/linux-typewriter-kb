@@ -12,7 +12,7 @@
 namespace os::filesystem {
 
 namespace {
-    constexpr char DEVICES_IDS_DIR[] = "/dev/input/by-id/";
+    constexpr char DEVICES_IDS_DIR[] = "/dev/input/by-path/";
 
     bool is_keyboard_name(char const * name) {
         auto name_len = strlen(name);
