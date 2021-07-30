@@ -14,8 +14,8 @@ sudo apt install ./build/typewriter_keyboard.deb
 
 ### Building and installing gnome extension
 ```sh
-make gnome-extension # or just download existing one
-ln -s "$( pwd )"/build/typewriter-*.com ~/.local/share/gnome-shell/extensions/ # or extract .zip archive 
+make gnome-extension # or just download and extract existing one
+ln -s "$( pwd )"/build/typewriter-*.com ~/.local/share/gnome-shell/extensions/ 
 
 # Restart gnome: `Alt+F2` and then `r`
 # Enable extension via https://extensions.gnome.org/local/
@@ -36,5 +36,7 @@ Options:
     --gnome                   use gnome auth dialogue
 ```
 
-### Extension UI
+### Extension UI (the bottom one slider) 
+![image](https://user-images.githubusercontent.com/14273096/127714813-5ef0f4a7-28a3-435c-997b-f7d534e09a65.png)  
+ 
 
