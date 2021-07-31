@@ -14,21 +14,25 @@ class Extension {
     
     enable() {
         log('[Typewriter-kb]  Starting extension ... ');
-        this._typewriter = new TypewriterProcess(Me.path);
+        this._typewriter = new TypewriterProcess();
         if (this._typewriter.start()) {
-            this._indicator = new Indicator(this._typewriter.subprocessInput());
-            Main.panel.statusArea.aggregateMenu.menu.addMenuItem(this._indicator.menu, 2);
+            this._indicator = new Indicator(this._typewriter.subprocessInput());            
+            this._indicator.connect(Main.panel.statusArea.aggregateMenu.menu, 2);
         }
         log('[Typewriter-kb]  Extension started');
     }
     
     disable() {
-        this._typewriter.stop();
-        this._indicator.menu.destroy();
-        this._indicator.destroy();
+        if (this._typewriter) {
+            this._typewriter.stop();
+            this._typewriter = null;
+        }
 
-        this._indicator = null;
-        this._typewriter = null;
+        if (this._indicator) {
+            this._indicator.disconnect();
+            this._indicator.destroy();
+            this._indicator = null;
+        }
     }
 }
 

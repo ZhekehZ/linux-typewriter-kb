@@ -1,6 +1,7 @@
 {
   "name": "Typewriter Keyboard",
-  "description": "Add a typewriter effect to your keyboard",
-  "uuid": "typewriter-kb@zzzheka97.gmail.com",
+  "uuid": "@UUID@",
+  "description": "Add a typewriter effect to your keyboard. This extension is based on typewriter-kb application (https://github.com/ZhekehZ/linux-typewriter-kb), which is required to run the extension, but is not part of it.",
+  "version": @VERSION@,
   "shell-version": [ "3.38" ]
 }

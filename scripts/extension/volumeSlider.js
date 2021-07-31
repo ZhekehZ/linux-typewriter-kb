@@ -12,19 +12,23 @@ var Indicator = GObject.registerClass(
 
             this._output = output;
             this._lastUpdate = 0;
+            
             this._item = new PopupMenu.PopupBaseMenuItem({ activate: false });
-            this.menu.addMenuItem(this._item);
-    
-            this._slider = new Slider.Slider(0.5);
-            this._sliderChangedId = this._slider.connect('notify::value',
-                this._sliderChanged.bind(this));
-            this._slider.accessible_name = _("Typewriter keyboard volume");
-    
             let icon = new St.Icon({ icon_name: 'process-working-symbolic',
                                      style_class: 'popup-menu-icon' });
-
             this._item.add(icon);
+            this.menu.addMenuItem(this._item);
+
+            this._slider = new Slider.Slider(0.5);
+            this._slider.accessible_name = _("Typewriter keyboard volume");
             this._item.add_child(this._slider);
+        }
+
+        connect(menu, position) {
+            menu.addMenuItem(this.menu, position);
+
+            this._sliderChangedId = this._slider.connect('notify::value',
+                        this._sliderChanged.bind(this));
 
             this._item.connect('button-press-event', (actor, event) => {
                 return this._slider.startDragging(event);
@@ -36,7 +40,12 @@ var Indicator = GObject.registerClass(
                 return this._slider.emit('scroll-event', event);
             });
         }
-    
+
+        disconnect() {
+            this._slider.destroy();
+            this._item.destroy();
+        }
+
         _sliderChanged() {
             let currentTime = Date.now();
             let delta = currentTime - this._lastUpdate;
