@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sound/snd_wav_sound.hpp"
 #include "keyboard/kb_button_codes.hpp"
+#include "sound/snd_wav_sound.hpp"
 
 #include <vector>
 
@@ -26,27 +26,26 @@ struct TypewriterConfig {
 
 namespace detail {
 
-    struct InnerButtonConfig {
-        std::vector<int> down_ids;
-        std::vector<int> up_ids;
-        std::vector<int> hold_ids;
-        SoundSelectKind selector;
-    };
+struct InnerButtonConfig {
+    std::vector<size_t> down_ids;
+    std::vector<size_t> up_ids;
+    std::vector<size_t> hold_ids;
+    SoundSelectKind selector;
+};
 
-    struct InnerConfig {
-        InnerButtonConfig regular_button;
-        InnerButtonConfig special_button;
-        InnerButtonConfig enter_button;
-    };
+struct InnerConfig {
+    InnerButtonConfig regular_button;
+    InnerButtonConfig special_button;
+    InnerButtonConfig enter_button;
+};
 
-} // namespace detail
+}// namespace detail
 
 class Typewriter {
-public:
+ public:
     Typewriter(
-        TypewriterConfig const & config, 
-        int default_volume
-    );
+        TypewriterConfig const &config,
+        int default_volume);
 
     int get_volume();
     void set_volume(int value);
@@ -57,10 +56,10 @@ public:
 
     void hold(kb::ButtonType type);
 
-private:
+ private:
     std::vector<snd::WAVSound> sounds_;
     detail::InnerConfig config_;
     int volume_;
 };
 
-} // namespace typewriter
+}// namespace typewriter

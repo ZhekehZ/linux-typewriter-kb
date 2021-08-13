@@ -10,9 +10,8 @@ bool is_enter(int code) {
 }
 
 bool is_special(int code) {
-    for (int special : 
-        { LEFT_SHIFT, RIGHT_SHIFT, LEFT_ALT, RIGHT_ALT, TAB, BACKSPACE}) 
-    {
+    for (int special :
+         {LEFT_SHIFT, RIGHT_SHIFT, LEFT_ALT, RIGHT_ALT, TAB, BACKSPACE}) {
         if (code == special) {
             return true;
         }
@@ -20,7 +19,7 @@ bool is_special(int code) {
     return false;
 }
 
-} // namespace code
+}// namespace code
 
 ButtonType code_to_type(int code) {
     if (code::is_enter(code)) {
@@ -32,4 +31,4 @@ ButtonType code_to_type(int code) {
     return ButtonType::REGULAR;
 }
 
-} // namespace kb
+}// namespace kb

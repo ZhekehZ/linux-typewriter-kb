@@ -1,6 +1,8 @@
 #pragma once
+// clang-format off
 
 #include "sound/snd_wav_sound.hpp"
+#include "typewriter/typewriter.hpp"
 
 const typewriter::TypewriterConfig DEFAULT_CONFIG = {
     .regular_button = {
@@ -24,3 +26,5 @@ const typewriter::TypewriterConfig DEFAULT_CONFIG = {
         .selector = typewriter::SoundSelectKind::RANDOM
     }
 };
+
+// clang-format on

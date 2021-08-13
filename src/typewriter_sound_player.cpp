@@ -1,10 +1,12 @@
 #include <iostream>
 
 #include "keyboard/kb_event_reader.hpp"
-#include "typewriter/typewriter.hpp"
-#include "typewriter/config.hpp"
 #include "sound/snd_sdl_mixer.hpp"
+#include "typewriter/config.hpp"
+#include "typewriter/typewriter.hpp"
 #include "utils/utils.hpp"
+
+namespace {
 
 kb::Event recv() {
     kb::Event event;
@@ -17,6 +19,8 @@ kb::Event recv() {
 bool can_recv() {
     return std::cin.operator bool();
 }
+
+}// namespace
 
 int main() try {
     std::cin.tie(nullptr);
@@ -58,14 +62,15 @@ int main() try {
                 std::cout << type.get_volume() << std::endl;
                 break;
             }
-            case kb::Event::Kind::ERROR: {
+            case kb::Event::Kind::ERROR:
+            default: {
                 std::cerr << "INVALID EVENT!" << std::endl;
                 break;
             }
         }
     }
-    
-} catch(...) {
+
+} catch (...) {
     std::cerr << "Unexpected error. " << std::endl
               << "The application may already be running." << std::endl;
     return EXIT_FAILURE;

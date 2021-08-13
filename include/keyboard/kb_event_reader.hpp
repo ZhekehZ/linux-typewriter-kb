@@ -2,19 +2,22 @@
 
 #include "kb_button_codes.hpp"
 
-#include <vector>
 #include <optional>
 #include <utility>
+#include <vector>
 
 #include <linux/input.h>
-
 
 namespace kb {
 
 struct Event {
     enum class Kind {
-        DOWN, UP, PRESSED, 
-        EXIT, SET_VOLUME, GET_VOLUME,
+        DOWN,
+        UP,
+        PRESSED,
+        EXIT,
+        SET_VOLUME,
+        GET_VOLUME,
         ERROR
     };
 
@@ -29,15 +32,15 @@ struct config_source {
 };
 
 class event_reader {
-public:
+ public:
     event_reader(config_source config, std::vector<int> descriptors);
 
     std::optional<Event> next();
 
     ~event_reader();
 
-private:
-    void make_fd_set(fd_set & fds);
+ private:
+    void make_fd_set(fd_set &fds);
 
     std::vector<std::pair<int, bool>> read_ds_;
     config_source config_;
@@ -45,4 +48,4 @@ private:
     int max_ds_;
 };
 
-} // namespace kb
+}// namespace kb

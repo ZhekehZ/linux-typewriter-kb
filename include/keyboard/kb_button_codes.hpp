@@ -5,7 +5,7 @@
 namespace kb {
 
 namespace code {
-    
+
 inline constexpr int ENTER = KEY_ENTER;
 inline constexpr int ENTER2 = KEY_KPENTER;
 
@@ -22,10 +22,10 @@ bool is_enter(int code);
 
 bool is_special(int code);
 
-} // namespace code
+}// namespace code
 
 enum class ButtonType {
-    REGULAR, 
+    REGULAR,
     SPECIAL,
     ENTER,
     NONE
@@ -33,4 +33,4 @@ enum class ButtonType {
 
 ButtonType code_to_type(int code);
 
-} // namespace kb
+}// namespace kb

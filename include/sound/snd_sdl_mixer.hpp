@@ -3,9 +3,9 @@
 namespace snd {
 
 class SDLRAIIContextManager {
-public:
+ public:
     enum Status {
-        OK, 
+        OK,
         SDL_INIT_ERROR,
         SDL_MIXER_INIT_ERROR,
         SDL_ALLOCATE_CHANNELS_ERROR
@@ -17,11 +17,10 @@ public:
 
     ~SDLRAIIContextManager();
 
-    char const * get_error_message() const;
+    char const *get_error_message() const;
 
-private:
+ private:
     Status status_;
-
 };
 
-} // namespace snd
+}// namespace snd

@@ -9,8 +9,8 @@ int get_open_keys(bool owner, StorageAccessMode mode) {
 int get_page_keys(StorageAccessMode mode) {
     if (mode == StorageAccessMode::R) {
         return PROT_READ;
-    } 
+    }
     return PROT_READ | PROT_WRITE;
 }
 
-} // namespace os::detail
+}// namespace os::detail

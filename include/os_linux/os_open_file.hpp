@@ -4,7 +4,6 @@
 
 namespace os {
 
-    std::optional<int> open_file(char const * path, int mode, int opts);
-    
+std::optional<int> open_file(char const *path, int mode, int opts);
 
-} // namespace os
+}// namespace os

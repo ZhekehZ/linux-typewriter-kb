@@ -3,11 +3,18 @@ VERSION_GNOME=0.4
 
 BUILD_PATH = build
 CXX_FLAGS = -std=c++2a -O3  \
-	# -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization    \
-	# -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wnoexcept                           \
-	# -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo \
-	# -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wno-unused
-
+	-Wall                   \
+	-Werror                 \
+	-Wpedantic              \
+	-Wextra                 \
+	-Wconversion            \
+	-Wcast-align            \
+	-Wunused                \
+	-Wshadow                \
+	-Wold-style-cast        \
+	-Wpointer-arith         \
+	-Wcast-qual             \
+	-Wno-missing-braces
 
 
 MAINTAINER_NAME = zhekehz
@@ -40,11 +47,17 @@ DEB_PATH = $(BUILD_ABS_PATH)/$(DEB_PACKAGE_NAME)
 
 all: deb gnome-extension
 
+format: 
+	clang-format -i -style=file $$( find src -type f -name '*.cpp' )     \
+								$$( find src -type f -name '*.c' )       \
+								$$( find include -type f -name '*.hpp' ) \
+								$$( find include -type f -name '*.h' ) 
+
 separate: kb_reader sound_player
 	cp scripts/run_separate.sh $(BUILD_ABS_PATH)/
 	chmod 777 $(BUILD_ABS_PATH)/run_separate.sh
 
-kb_reader:
+kb_reader: format
 	mkdir -p $(BUILD_ABS_PATH)
 	$(CXX)                  \
 		$(CXX_FLAGS)        \
@@ -52,7 +65,7 @@ kb_reader:
 		-I$(HEADERS)        \
 		-o $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER)
 
-sound_player: convert_wav_to_code
+sound_player: format convert_wav_to_code
 	mkdir -p $(BUILD_ABS_PATH)
 	$(CXX)                       \
 		$(CXX_FLAGS)             \
