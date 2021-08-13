@@ -1,6 +1,8 @@
-(Icons made by [Freepik]("https://www.freepik.com")  from [Flaticon]("https://www.flaticon.com/"))
-
-## Linux typewriter-sound keyboard 
+<img src="https://raw.githubusercontent.com/ZhekehZ/linux-typewriter-kb/main/assets/typewriter.svg" 
+  width="32" height="32" alt="Icon">
+Linux typewriter-sound keyboard 
+------
+> (Icons made by [Freepik](https://www.freepik.com)  from [Flaticon](https://www.flaticon.com/))
 
 ### Prerequirements (only for build)
 
@@ -39,6 +41,6 @@ Options:
 ```
 
 ### Extension UI (the bottom slider) 
-![image](https://user-images.githubusercontent.com/14273096/127714813-5ef0f4a7-28a3-435c-997b-f7d534e09a65.png)  
+![image](https://user-images.githubusercontent.com/14273096/129383204-f8e67c2d-6000-46ef-b319-e9144497ae6a.png)
  
 
