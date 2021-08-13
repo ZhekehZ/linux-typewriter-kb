@@ -54,6 +54,10 @@ int main() try {
                 type.set_volume(event.value);
                 break;
             }
+            case kb::Event::Kind::GET_VOLUME: {
+                std::cout << type.get_volume() << std::endl;
+                break;
+            }
             case kb::Event::Kind::ERROR: {
                 std::cerr << "INVALID EVENT!" << std::endl;
                 break;

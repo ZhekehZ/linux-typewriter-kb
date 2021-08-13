@@ -1,8 +1,14 @@
-VERSION=0.3-alpha
-VERSION_GNOME=0.3
+VERSION=0.4-alpha
+VERSION_GNOME=0.4
 
 BUILD_PATH = build
-CXX_FLAGS = -std=c++17 -Ofast
+CXX_FLAGS = -std=c++2a -O3  \
+	# -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization    \
+	# -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wnoexcept                           \
+	# -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo \
+	# -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wno-unused
+
+
 
 MAINTAINER_NAME = zhekehz
 MAINTAINER_EMAIL = zzzheka97@gmail.com
@@ -25,6 +31,7 @@ HEADERS = include
 LIBS = -lSDL2 -lSDL2_mixer -lrt
 
 BUILD_ABS_PATH = $(realpath .)/$(BUILD_PATH)
+ASSETS_PATH = $(realpath .)/assets
 GENERATED_ABS_PATH = $(BUILD_ABS_PATH)/generated
 
 ALL_GENERATED_SOURCES = $$(find $(GENERATED_ABS_PATH) -type f)
@@ -45,7 +52,7 @@ kb_reader:
 		-I$(HEADERS)        \
 		-o $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_KB_READER)
 
-sound_player: convert_assets_to_code
+sound_player: convert_wav_to_code
 	mkdir -p $(BUILD_ABS_PATH)
 	$(CXX)                       \
 		$(CXX_FLAGS)             \
@@ -56,11 +63,11 @@ sound_player: convert_assets_to_code
 		-DINJECT_RESOURCES       \
 		-o $(BUILD_ABS_PATH)/$(OUTPUT_EXECUTABLE_NAME_TW_SND_PLAYER)
 
-convert_assets_to_code:
+convert_wav_to_code:
 	mkdir -p $(GENERATED_ABS_PATH)
-	for asset in $(shell cd assets && find . -type f); do                         \
-		output_name=$$(echo $${asset} | tr / _ | sed 's/.wav/.cpp/');             \
-		$$(cd assets && xxd -i $${asset} > $(GENERATED_ABS_PATH)/$${output_name});\
+	for asset in $(shell cd assets/wav && find . -type f); do                         \
+		output_name=$$(echo $${asset} | tr / _ | sed 's/.wav/.cpp/');                 \
+		$$(cd assets/wav && xxd -i $${asset} > $(GENERATED_ABS_PATH)/$${output_name});\
 	done
 
 deb: separate
@@ -81,6 +88,7 @@ gnome-extension: separate
 	cp -r scripts/extension/* $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/
 	sh scripts/generate_metadata.sh $(VERSION_GNOME) $(GNOME_EXTENSION_NAME) > \
 			$(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/metadata.json
+	cp $(ASSETS_PATH)/typewriter.svg $(BUILD_ABS_PATH)/$(GNOME_EXTENSION_NAME)/typewriter-symbolic.svg
 	cd $(BUILD_ABS_PATH) && zip -jD "$(GNOME_EXTENSION_NAME).zip" $(GNOME_EXTENSION_NAME)/*
 
 

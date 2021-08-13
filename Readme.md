@@ -1,3 +1,5 @@
+(Icons made by [Freepik]("https://www.freepik.com")  from [Flaticon]("https://www.flaticon.com/"))
+
 ## Linux typewriter-sound keyboard 
 
 ### Prerequirements (only for build)
@@ -36,7 +38,7 @@ Options:
     --gnome                   use gnome auth dialogue
 ```
 
-### Extension UI (the bottom one slider) 
+### Extension UI (the bottom slider) 
 ![image](https://user-images.githubusercontent.com/14273096/127714813-5ef0f4a7-28a3-435c-997b-f7d534e09a65.png)  
  
 

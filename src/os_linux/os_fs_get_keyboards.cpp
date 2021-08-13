@@ -49,11 +49,6 @@ std::vector<int> open_and_get_all_keyboards() {
             strcpy(link_filename, DEVICES_IDS_DIR);
             strcat(link_filename, dir_entry->d_name);
 
-            auto prefix_len = strlen(DEVICES_IDS_DIR);
-            if (!read_link_append(link_filename, link_filename + prefix_len, sizeof(link_filename) - prefix_len)) {
-                continue;
-            }
-
             if (int event_file = open(link_filename, O_RDONLY); event_file < 0) {
                 continue;
             } else {

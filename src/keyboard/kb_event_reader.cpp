@@ -49,9 +49,9 @@ namespace {
         return {event};
     }
 
-    std::optional<Event> get_event_from_stdin() {
+    std::optional<Event> get_event_from_fd(int fd) {
         static char message[20];
-        auto bytes = read(STDIN_FILENO, message, 20);
+        auto bytes = read(fd, message, 20);
         if (bytes < 2 || bytes >= sizeof(message)) {
             return std::nullopt;
         }
@@ -65,11 +65,20 @@ namespace {
                     .value=volume
                 }
             };
+        } else if (message[0] == 'g') {
+            return {
+                Event {
+                    .type=ButtonType::NONE,
+                    .kind=Event::Kind::GET_VOLUME,
+                    .value=0
+                }
+            };
         } else if (strncmp(message, "exit", 4) == 0) {
             return {
                 Event{
                     .type=ButtonType::NONE,
                     .kind=Event::Kind::EXIT,
+                    .value=0
                 }
             };
         }
@@ -80,11 +89,18 @@ namespace {
 } // namespace
 
 
-event_reader::event_reader(std::vector<int> descriptors)
+event_reader::event_reader(config_source config, std::vector<int> descriptors)
+    : config_(config)
 {
-    read_ds_.reserve(descriptors.size() + 1);
-    read_ds_.emplace_back(STDIN_FILENO, true);
-    max_ds_ = STDIN_FILENO;
+    max_ds_ = -1;
+    if (config_.use_stdin) {
+        read_ds_.emplace_back(STDIN_FILENO, true);
+        max_ds_ = std::max(STDIN_FILENO, max_ds_);
+    }
+    if (config_.special_fd.has_value()) {
+        read_ds_.emplace_back(config_.special_fd.value(), true);
+        max_ds_ = std::max(config_.special_fd.value(), max_ds_);
+    }
     for (int fd : descriptors) {
         read_ds_.emplace_back(fd, true);
         max_ds_ = std::max(fd, max_ds_);
@@ -111,8 +127,8 @@ std::optional<Event> event_reader::next() {
 
             if (FD_ISSET(fd, &fds)) {
 
-                if (fd == STDIN_FILENO) {
-                    auto stdin_event = get_event_from_stdin();
+                if (fd == config_.special_fd.value_or(STDIN_FILENO)) {
+                    auto stdin_event = get_event_from_fd(fd);
                     if (stdin_event.has_value()) {
                         return stdin_event;
                     }

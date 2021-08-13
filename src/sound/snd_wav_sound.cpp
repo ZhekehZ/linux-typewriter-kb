@@ -11,7 +11,7 @@ namespace detail {
     std::map<std::string, Bytes> & GET_GLOBAL_STORAGE() {
         static std::map<std::string, Bytes> STORAGE;
         return STORAGE;
-    };
+    }
 
 } // namespace detail
 

@@ -23,29 +23,25 @@ Options:
 KB_READ='<to eval>'
 TW_SND='<to eval>'
 
-TW_CONFIG=/tmp/typewriter.config
-
+TW_CONFIG_PIPE=/tmp/typewriter-kb-pipe
+TW_LOG_FILE=/tmp/typewriter-kb-log.txt
 
 read_with_redirected_input()
 {
-    exec 3<> $TW_CONFIG 
-    echo 'v50' > $TW_CONFIG
-    
     if [ "$1" = true ]
     then
-        pkexec "$KB_READ" <&3 | "$TW_SND"
+        pkexec "$KB_READ" --pipe | "$TW_SND" > $TW_LOG_FILE
     else
-        sudo "$KB_READ" <&3 | "$TW_SND"
+        sudo "$KB_READ" --pipe | "$TW_SND" > $TW_LOG_FILE
     fi
 
-    exec 3>&-
-    rm $TW_CONFIG
+    rm $TW_CONFIG_PIPE
 }
 
 call_start()
 {
     check_root
-    if [ -f $TW_CONFIG ]
+    if [ -p $TW_CONFIG_PIPE ]
     then
         echo 'Typewriter already running'
         exit 1
@@ -54,7 +50,12 @@ call_start()
         then
             sudo echo "Running in background ..."
         fi
-        read_with_redirected_input "$1" | "$TW_SND" &
+
+        mkfifo $TW_CONFIG_PIPE
+        touch $TW_LOG_FILE
+        read_with_redirected_input "$1" &
+        echo 'v50' > $TW_CONFIG_PIPE
+        echo 'Done.'
     fi
 }
 
@@ -68,9 +69,9 @@ call_setvolume()
         value="$1"
     fi
 
-    if [ -f $TW_CONFIG ]
+    if [ -e $TW_CONFIG_PIPE ] && [ -p $TW_CONFIG_PIPE ]
     then 
-        echo "v$value" >> $TW_CONFIG
+        echo "v$value" > $TW_CONFIG_PIPE
     else
         echo 'Start typewriter-kb first'
     fi
@@ -78,9 +79,10 @@ call_setvolume()
 
 call_getvolume()
 {
-    if [ -f $TW_CONFIG ]
+    if [ -e $TW_CONFIG_PIPE ] && [ -p $TW_CONFIG_PIPE ]
     then 
-        percent="$( tail -1 $TW_CONFIG | sed -E 's/v([0-9]+)/\1/g' )"
+        echo 'g' > $TW_CONFIG_PIPE
+        percent="$( tail -1 $TW_LOG_FILE )"
         echo "Current volume is ${percent}%"
     else
         echo 'Start typewriter-kb first'
@@ -90,9 +92,9 @@ call_getvolume()
 
 call_stop()
 {
-    if [ -f $TW_CONFIG ]
+    if [ -e $TW_CONFIG_PIPE ] && [ -p $TW_CONFIG_PIPE ]
     then 
-        echo "exit" >> $TW_CONFIG
+        echo "exit" > $TW_CONFIG_PIPE
     else
         echo 'Start typewriter-kb first'
     fi

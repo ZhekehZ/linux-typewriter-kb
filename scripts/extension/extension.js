@@ -4,7 +4,9 @@ const Main = imports.ui.main;
 
 const Indicator = Me.imports.volumeSlider.Indicator;
 const TypewriterProcess = Me.imports.typewriterProcess.TypewriterProcess;
+const Logger = Me.imports.logger.Logger;
 
+const GLib = imports.gi.GLib;
 
 class Extension {
     constructor() {
@@ -13,13 +15,15 @@ class Extension {
     }
     
     enable() {
-        log('[Typewriter-kb]  Starting extension ... ');
+        Logger.logInfo('Enabling extension ... ');
+
         this._typewriter = new TypewriterProcess();
         if (this._typewriter.start()) {
             this._indicator = new Indicator(this._typewriter.subprocessInput());            
             this._indicator.connect(Main.panel.statusArea.aggregateMenu.menu, 2);
         }
-        log('[Typewriter-kb]  Extension started');
+
+        Logger.logInfo('Extension enabled');
     }
     
     disable() {
@@ -33,6 +37,8 @@ class Extension {
             this._indicator.destroy();
             this._indicator = null;
         }
+
+        Logger.logInfo('Extension disabled');
     }
 }
 

@@ -23,7 +23,7 @@ namespace detail {
 }
 
 #ifndef INJECT_RESOURCES
-#define WAV_RESOURCE(folder, name) "assets/"#folder"/"#name".wav"
+#define WAV_RESOURCE(folder, name) "assets/wav/"#folder"/"#name".wav"
 #else
 #define WAV_RESOURCE(folder, name)                     \
 [](){                                                  \

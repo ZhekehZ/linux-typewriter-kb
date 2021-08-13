@@ -14,7 +14,7 @@ namespace kb {
 struct Event {
     enum class Kind {
         DOWN, UP, PRESSED, 
-        EXIT, SET_VOLUME,
+        EXIT, SET_VOLUME, GET_VOLUME,
         ERROR
     };
 
@@ -23,9 +23,14 @@ struct Event {
     int value;
 };
 
+struct config_source {
+    bool use_stdin;
+    std::optional<int> special_fd;
+};
+
 class event_reader {
 public:
-    event_reader(std::vector<int> descriptors);
+    event_reader(config_source config, std::vector<int> descriptors);
 
     std::optional<Event> next();
 
@@ -35,6 +40,8 @@ private:
     void make_fd_set(fd_set & fds);
 
     std::vector<std::pair<int, bool>> read_ds_;
+    config_source config_;
+
     int max_ds_;
 };
 

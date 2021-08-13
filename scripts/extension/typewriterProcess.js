@@ -1,65 +1,61 @@
 const { Gio, GObject } = imports.gi;
 const GLib = imports.gi.GLib;
 
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Logger = Me.imports.logger.Logger;
+
 var TypewriterProcess = 
     class TypewriterProcess {
         constructor() {
-            this._subprocessInput = null;
+            this._subprocessStream = null;
             
             this._kb_reader = '/opt/typewriter_keyboard/kb_read';
             this._typewriter_sound = '/opt/typewriter_keyboard/tw_snd';
         }
         
         start() {
-            try { 
-                this._startProcesses(); 
-            } catch(e) {
-                log('[Typewriter-kb]  ' + e);
+            let success, fd;
+            [success, fd] = this._startProcesses();
+            if (success) { 
+                this._subprocessStream = new Gio.UnixOutputStream({ fd: fd, close_fd: true }); 
+            } else {
+                Logger.logError('Unable to start subprocess');
             } 
-            return this._isRunning();
+            return success;
         }
 
         stop() {
-            if (this._isRunning()) {
-                try { 
-                    this._stopProcesses(); 
-                } catch(e) {
-                    log('[Typewriter-kb]  mb it\'s ok, but ' + e);
-                } 
-            }
-            this._subprocessInput = null;
+            this._stopProcesses(); 
+            this._subprocessStream = null;
         }
 
         subprocessInput() {
-            return this._subprocessInput;
-        }
-
-        _isRunning() {
-            if (this._subprocessInput) return true;
-            return false;
+            return this._subprocessStream;
         }
         
-        _onProcessStarted(name, success, pid) {
-            log('[Typewriter-kb]  Starting ' + name + ' process: ' + success + ', pid = ' + pid);
-                    
-            if (!success) return;
-            
+        _handleNewProcess(name, pid) {
+            Logger.logInfo(`Subprocess ${name} started`);
             GLib.child_watch_add( GLib.PRIORITY_DEFAULT, pid,
                 function(pid, status) {
                     GLib.spawn_close_pid(pid);
-                    log('[Typewriter-kb]  Subprocess ' + name + ' finished, status = ' + status);
+                    Logger.logInfo(`Subprocess ${name} finished, status = ${status}`);
                 });
         }
 
         _stopProcesses() {
-            if (this._subprocessInput) {
-                let status, bytes_written;
-                [status, bytes_written] = this._subprocessInput.write_all('exit\n', null);
-                this._subprocessInput.flush(null);
-                this._subprocessInput.close(null);
-                log('[Typewriter-kb]  Stopping process: ' + status);
+            try {
+                if (this._subprocessStream) {
+                    let status, bytes_written;
+                    [status, bytes_written] = this._subprocessStream.write_all('exit\n', null);
+                    this._subprocessStream.flush(null);
+                    this._subprocessStream.close(null);
+                    Logger.logInfo(`Stopping process: ${status}`);
+                }
+            } catch (e) {
+                Logger.logError(e);
             }
-            this._subprocessInput = null;
+            this._subprocessStream = null;
         }
 
         _testFilesExists() {
@@ -71,27 +67,54 @@ var TypewriterProcess =
 
         _startProcesses() {
             if (!this._testFilesExists()) {
-                log('[Typewriter-kb]  typewriter-kb not found!');
-                return;
+                Logger.logError('typewriter-kb not found!');
+                return null;
             }
-
-            let success, argv, pid, stdin, stdout, stderr;
-
-            [success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(
-                null, ['pkexec', this._kb_reader], null, 
-                GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+            
+            try {
                 
-            GLib.close(stderr);
-            this._subprocessInput = new Gio.UnixOutputStream({ fd: stdin, close_fd: true });
+                let success, stdin, stdout;
+                [success, stdin, stdout] = this._startKeyboardReader();
+                if (success) {
+                    success = this._startTypewriterSoundPlayer(stdout);
+                }
+                return [success, stdin];
+            
+            } catch (e) {
+                Logger.logError(e);
+                return null;
+            }
+        }
 
-            this._onProcessStarted('kb_read', success, pid);
+        _startKeyboardReader() {
+            let keyboard_read_command = ['pkexec', this._kb_reader, '--stdin'];
+            
+            let success, pid, stdin, stderr, stdout;
+            [success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(
+                null, keyboard_read_command, null, 
+                GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+            
+            if (success) {
+                GLib.close(stderr);
+                this._handleNewProcess('keyboard reader', pid);
+                return [true, stdin, stdout];
+            } 
+            
+            return [false, null, null];
+        }
 
+        _startTypewriterSoundPlayer(stdin) {
+            let typewriter_sound_command = [this._typewriter_sound];
+            
+            let success, pid;
             [success, pid] = GLib.spawn_async_with_fds(
-                null, [this._typewriter_sound], null, 
-                GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                null, stdout, -1, -1);
+                null, typewriter_sound_command, null, 
+                GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD, null, stdin, -1, -1);
 
-            this._onProcessStarted('tw_snd', success, pid);
+            if (success) {
+                this._handleNewProcess('typewriter sound player', pid);
+            }
+            return success;
         }
 
     };
