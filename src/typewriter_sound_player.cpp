@@ -70,6 +70,8 @@ int main() try {
         }
     }
 
+} catch (std::exception const &error) {
+    std::cerr << "Unexpected error: " << error.what() << std::endl;
 } catch (...) {
     std::cerr << "Unexpected error. " << std::endl
               << "The application may already be running." << std::endl;

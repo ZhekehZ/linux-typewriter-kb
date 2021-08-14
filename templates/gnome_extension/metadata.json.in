@@ -1,7 +1,7 @@
 {
-  "name": "Typewriter Keyboard",
+  "name": "@GEXT_NAME@",
   "uuid": "@GEXT_UUID@",
-  "description": "Add a typewriter effect to your keyboard.\n\nThis extension is based on typewriter-kb application (https://github.com/ZhekehZ/linux-typewriter-kb), which is required to run the extension, but is not part of it.\n\n-------------------------------------------\nIcons made by Freepik from www.flaticon.com",
+  "description": "@GEXT_DESCRIPTION@",
   "version": @GEXT_VERSION@,
-  "shell-version": [ "3.38" ]
+  "shell-version": [ "@GEXT_SHELL_VERSION@" ]
 }

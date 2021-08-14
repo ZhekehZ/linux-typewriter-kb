@@ -22,7 +22,10 @@ std::map<std::string, Bytes> &GET_GLOBAL_STORAGE();
 }// namespace detail
 
 #ifndef INJECT_RESOURCES
-#define WAV_RESOURCE(folder, name) "assets/wav/" #folder "/" #name ".wav"
+#ifndef APPLICATION_FIXED_ABS_PATH
+#define APPLICATION_FIXED_ABS_PATH "./"
+#endif
+#define WAV_RESOURCE(folder, name) APPLICATION_FIXED_ABS_PATH "assets/wav/" #folder "/" #name ".wav"
 #else
 #define WAV_RESOURCE(folder, name)                               \
     []() {                                                       \

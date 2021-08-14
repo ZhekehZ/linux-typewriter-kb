@@ -16,7 +16,7 @@ std::map<std::string, Bytes> &GET_GLOBAL_STORAGE() {
 }// namespace detail
 
 WAVSound::WAVSound(std::string const &filename, int volume)
-#ifndef INJECT_RESOURCES
+#ifndef INJECT_ASSETS
     : chunk_(Mix_LoadWAV(filename.c_str()), Mix_FreeChunk)
 #else
     : chunk_(Mix_LoadWAV_RW(SDL_RWFromMem(detail::GET_GLOBAL_STORAGE()[filename].data,

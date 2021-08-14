@@ -2,6 +2,11 @@
 
 for app in "$@"
 do
+    if [ ! -x "${app}" ]
+    then
+        continue
+    fi
+
     LIBS="$( objdump -p "$app"           \
            | grep NEEDED                 \
            | sed -E 's/^\s+NEEDED\s+//g' \
