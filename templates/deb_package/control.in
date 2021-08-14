@@ -1,10 +1,10 @@
 Package: typewriter-keyboard
-Version: @VERSION@
+Version: @DEB_VERSION@
 Section: unknown
 Priority: optional
-Depends: @DEPENDENCIES@
+Depends: @DEB_DEPENDENCIES@
 Architecture: amd64
 Essential: no
-Installed-Size: @APP_SIZE@
-Maintainer: @MAINTAINER_NAME@ <@MAINTAINER_EMAIL@>
+Installed-Size: @DEB_APP_SIZE@
+Maintainer: @DEB_MAINTAINER_NAME@ <@DEB_MAINTAINER_EMAIL@>
 Description: Typewriter sounds for keyboard

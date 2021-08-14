@@ -12,15 +12,20 @@ sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
 
 ### Building and installing .deb package
 ```sh
-make deb # or just download existing one
-sudo apt install ./build/typewriter_keyboard.deb
+mkdir -p build 
+cmake -S . -B build
+cmake --build build --target DEB_PACKAGE
+
+sudo apt install ./build/*.deb
 ```
 
 ### Building and installing gnome extension
 ```sh
-make gnome-extension # or just download and extract existing one
-ln -s "$( pwd )"/build/typewriter-*.com ~/.local/share/gnome-shell/extensions/ 
+mkdir -p build 
+cmake -S . -B build
+cmake --build build --target GNOME_EXTENSION
 
+ln -s "$( pwd )"/build/*.com ~/.local/share/gnome-shell/extensions/ 
 # Restart gnome: `Alt+F2` and then `r`
 # Enable extension via https://extensions.gnome.org/local/
 ```

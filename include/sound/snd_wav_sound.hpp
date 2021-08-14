@@ -24,16 +24,16 @@ std::map<std::string, Bytes> &GET_GLOBAL_STORAGE();
 #ifndef INJECT_RESOURCES
 #define WAV_RESOURCE(folder, name) "assets/wav/" #folder "/" #name ".wav"
 #else
-#define WAV_RESOURCE(folder, name)                                   \
-    []() {                                                           \
-        extern unsigned char __##folder##_##name##_wav[];            \
-        extern unsigned int __##folder##_##name##_wav_len;           \
-        std::string what = #folder #name;                            \
-        ::snd::detail::GET_GLOBAL_STORAGE()[what] =                  \
-            ::snd::detail::Bytes{                                    \
-                __##folder##_##name##_wav,                           \
-                static_cast<size_t>(__##folder##_##name##_wav_len)}; \
-        return what;                                                 \
+#define WAV_RESOURCE(folder, name)                               \
+    []() {                                                       \
+        extern unsigned char folder##_##name##_wav[];            \
+        extern unsigned int folder##_##name##_wav_len;           \
+        std::string what = #folder #name;                        \
+        ::snd::detail::GET_GLOBAL_STORAGE()[what] =              \
+            ::snd::detail::Bytes{                                \
+                folder##_##name##_wav,                           \
+                static_cast<size_t>(folder##_##name##_wav_len)}; \
+        return what;                                             \
     }()
 #endif
 
