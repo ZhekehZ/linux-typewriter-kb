@@ -2,7 +2,9 @@
   width="32" height="32" alt="Icon">
 Linux typewriter-sound keyboard 
 ------
-> (Icons made by [Freepik](https://www.freepik.com)  from [Flaticon](https://www.flaticon.com/))
+> (Icons made by [Freepik](https://www.freepik.com)  from [Flaticon](https://www.flaticon.com/))  
+>   
+> [![CMake](https://github.com/ZhekehZ/linux-typewriter-kb/actions/workflows/cmake.yml/badge.svg)](https://github.com/ZhekehZ/linux-typewriter-kb/actions/workflows/cmake.yml) 
 
 ### Prerequirements (only for build)
 
