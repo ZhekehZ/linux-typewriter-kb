@@ -23,8 +23,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-          sudo apt-get install clang-format-12
           sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
+          clang-format --version
           
 
     - name: Configure CMake
