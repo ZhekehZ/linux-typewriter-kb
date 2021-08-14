@@ -21,7 +21,7 @@ std::map<std::string, Bytes> &GET_GLOBAL_STORAGE();
 
 }// namespace detail
 
-#ifndef INJECT_RESOURCES
+#ifndef INJECT_ASSETS
 #ifndef APPLICATION_FIXED_ABS_PATH
 #define APPLICATION_FIXED_ABS_PATH "./"
 #endif
