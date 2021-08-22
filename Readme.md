@@ -5,14 +5,20 @@ Linux typewriter-sound keyboard
 > (Icons made by [Freepik](https://www.freepik.com)  from [Flaticon](https://www.flaticon.com/))  
 >   
 > [![CMake](https://github.com/ZhekehZ/linux-typewriter-kb/actions/workflows/cmake.yml/badge.svg)](https://github.com/ZhekehZ/linux-typewriter-kb/actions/workflows/cmake.yml) 
-
-### Prerequirements (only for build)
+---
+### Installation
+1. Download .deb package [typewriter_keyboard.deb](https://github.com/ZhekehZ/linux-typewriter-kb/releases/latest/download/typewriter_keyboard.deb)  
+2. Install .deb package: ` sudo apt install <download-path>/typewriter_keyboard.deb `
+3. _(optional)_ Install gnome extension: [Typewriter-keyboard](https://extensions.gnome.org/extension/4427/typewriter-keyboard/)
+4. Read help `typewriter-kb --help`
+---
+### Prerequirements (for build only)
 
 ```sh 
 sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
 ```
 
-### Building and installing .deb package
+### Building and installing .deb package from sources
 ```sh
 mkdir -p build 
 cmake -S . -B build
@@ -21,7 +27,7 @@ cmake --build build --target DEB_PACKAGE
 sudo apt install ./build/*.deb
 ```
 
-### Building and installing gnome extension
+### Building and installing gnome extension from sources
 ```sh
 mkdir -p build 
 cmake -S . -B build
