@@ -21,6 +21,23 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Update compiler
+      run: |
+          sudo apt-get install gcc-10 g++-10
+          sudo update-alternatives --remove-all gcc
+          sudo update-alternatives --remove-all g++
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+          sudo update-alternatives --set cc /usr/bin/gcc
+
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+          sudo update-alternatives --set c++ /usr/bin/g++
+
+          g++ --version
+          gcc --version
+
     - name: Install dependencies
       run: |
           sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
