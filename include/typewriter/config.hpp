@@ -21,8 +21,8 @@ namespace detail {
                 return result.enter_button;
             }();
 
-            if (action_type == 0) return button.down_sounds;
-            if (action_type == 1) return button.up_sounds;
+            if (action_type == 0) return button.up_sounds;
+            if (action_type == 1) return button.down_sounds;
             return button.hold_sounds;
         };
 
