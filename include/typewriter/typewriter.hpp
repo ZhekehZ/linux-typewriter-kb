@@ -3,19 +3,26 @@
 #include "keyboard/kb_button_codes.hpp"
 #include "sound/snd_wav_sound.hpp"
 
+#include <injector/injector.hpp>
 #include <vector>
 
 namespace typewriter {
 
-enum class SoundSelectKind {
-    RANDOM
+struct SoundArray {
+    size_t count;
+    std::array<injector::injected_resources,
+               MAX_SOUNDS_PER_BUTTON> storage;
+};
+
+enum class SoundSelectStrategy {
+    RANDOM  // TODO implement other?
 };
 
 struct ButtonConfig {
-    std::vector<std::string> down_sounds;
-    std::vector<std::string> up_sounds;
-    std::vector<std::string> hold_sounds;
-    SoundSelectKind selector;
+    SoundArray down_sounds;
+    SoundArray up_sounds;
+    SoundArray hold_sounds;
+    SoundSelectStrategy selector;
 };
 
 struct TypewriterConfig {
@@ -24,30 +31,13 @@ struct TypewriterConfig {
     ButtonConfig enter_button;
 };
 
-namespace detail {
-
-struct InnerButtonConfig {
-    std::vector<size_t> down_ids;
-    std::vector<size_t> up_ids;
-    std::vector<size_t> hold_ids;
-    SoundSelectKind selector;
-};
-
-struct InnerConfig {
-    InnerButtonConfig regular_button;
-    InnerButtonConfig special_button;
-    InnerButtonConfig enter_button;
-};
-
-}// namespace detail
-
 class Typewriter {
  public:
-    Typewriter(
-        TypewriterConfig const &config,
-        int default_volume);
+    Typewriter(TypewriterConfig const &config,
+               int default_volume);
 
-    int get_volume();
+    [[nodiscard]]
+    int get_volume() const;
     void set_volume(int value);
 
     void down(kb::ButtonType type);
@@ -58,7 +48,7 @@ class Typewriter {
 
  private:
     std::vector<snd::WAVSound> sounds_;
-    detail::InnerConfig config_;
+    TypewriterConfig config_;
     int volume_;
 };
 

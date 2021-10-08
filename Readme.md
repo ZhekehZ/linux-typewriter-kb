@@ -14,9 +14,9 @@ Linux typewriter-sound keyboard
 ---
 ### Prerequirements (for build only)
 
-```sh 
-sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
-```
+- `sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd`
+- [Resource injector](https://github.com/ZhekehZ/Resource-Injector)
+
 
 ### Building and installing .deb package from sources
 ```sh

@@ -1,0 +1,9 @@
+REGULAR:
+    DOWN: wav_down_1 wav_down_2 wav_down_4
+    UP:   wav_up_1   wav_up_2   wav_up_4
+SPECIAL:
+    DOWN: wav_down_3 wav_down_5
+    UP:   wav_up_3   wav_up_5
+ENTER:
+    DOWN: wav_down_1 wav_down_2 wav_down_4
+    UP:   wav_up_carrige_return

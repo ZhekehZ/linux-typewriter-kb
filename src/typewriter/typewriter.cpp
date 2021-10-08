@@ -9,53 +9,40 @@ namespace typewriter {
 
 namespace {
 
-void load(std::vector<std::string> const &names,
-          std::vector<size_t> &indices,
-          std::map<std::string, size_t> &loaded) {
-    indices.reserve(names.size());
-    for (auto const &name : names) {
-        auto it = loaded.find(name);
-        if (it == loaded.end()) {
-            size_t new_idx = loaded.size();
-            loaded[name] = new_idx;
-            indices.push_back(new_idx);
-        } else {
-            indices.push_back(it->second);
-        }
+size_t find_max_idx(size_t max_idx, ButtonConfig const &buttonConfig) {
+    for (auto idx : buttonConfig.down_sounds.storage) {
+        max_idx = std::max(max_idx, static_cast<size_t>(idx));
     }
-}
-
-void load(
-    ButtonConfig const &btnCfg,
-    detail::InnerButtonConfig &cfg,
-    std::map<std::string, size_t> &loaded) {
-    load(btnCfg.down_sounds, cfg.down_ids, loaded);
-    load(btnCfg.up_sounds, cfg.up_ids, loaded);
-    load(btnCfg.hold_sounds, cfg.hold_ids, loaded);
-    cfg.selector = btnCfg.selector;
-}
-
-std::vector<std::string> inverse(std::map<std::string, size_t> const &loaded) {
-    std::vector<std::string> result(loaded.size());
-    for (auto const &[name, idx] : loaded) {
-        result[idx] = name;
+    for (auto idx : buttonConfig.up_sounds.storage) {
+        max_idx = std::max(max_idx, static_cast<size_t>(idx));
     }
-    return result;
+    for (auto idx : buttonConfig.hold_sounds.storage) {
+        max_idx = std::max(max_idx, static_cast<size_t>(idx));
+    }
+    return max_idx;
 }
 
-size_t choose(std::vector<size_t> const &indices, SoundSelectKind selector) {
+size_t find_max_idx(TypewriterConfig const &tpConfig) {
+    size_t max_idx = 0;
+    max_idx = find_max_idx(max_idx, tpConfig.regular_button);
+    max_idx = find_max_idx(max_idx, tpConfig.special_button);
+    max_idx = find_max_idx(max_idx, tpConfig.enter_button);
+    return max_idx;
+}
+
+size_t choose(SoundArray const &sounds, SoundSelectStrategy selector) {
     switch (selector) {
-        case SoundSelectKind::RANDOM: {
-            return indices[static_cast<size_t>(rand()) % indices.size()];
+        case SoundSelectStrategy::RANDOM: {
+            return static_cast<size_t>(
+                sounds.storage[static_cast<size_t>(rand()) % sounds.count]);
         };
 
         default: throw std::runtime_error("Invalid selector");
     }
 }
 
-detail::InnerButtonConfig const &get_btn_cfg(
-    kb::ButtonType type,
-    detail::InnerConfig const &cfg) {
+ButtonConfig const &get_btn_cfg(kb::ButtonType type,
+                                TypewriterConfig const &cfg) {
     if (type == kb::ButtonType::SPECIAL) {
         return cfg.special_button;
     } else if (type == kb::ButtonType::ENTER) {
@@ -66,43 +53,39 @@ detail::InnerButtonConfig const &get_btn_cfg(
 
 }// namespace
 
-Typewriter::Typewriter(
-    TypewriterConfig const &config,
-    int default_volume) : volume_(default_volume) {
-    std::map<std::string, size_t> loaded;
+Typewriter::Typewriter(TypewriterConfig const &config, int default_volume)
+    : config_(config), volume_(default_volume) {
+    size_t count = find_max_idx(config) + 1;
+    sounds_.reserve(count);
 
-    load(config.regular_button, config_.regular_button, loaded);
-    load(config.special_button, config_.special_button, loaded);
-    load(config.enter_button, config_.enter_button, loaded);
-
-    sounds_.reserve(loaded.size());
-    for (auto const &sound_name : inverse(loaded)) {
-        sounds_.emplace_back(sound_name, volume_);
+    for (size_t idx = 0; idx < count; ++idx) {
+        auto resource = static_cast<injector::injected_resources>(idx);
+        sounds_.emplace_back(resource, volume_);
     }
 }
 
 void Typewriter::down(kb::ButtonType type) {
     auto const &bcfg = get_btn_cfg(type, config_);
-    if (bcfg.down_ids.empty()) return;
-    size_t idx = choose(bcfg.down_ids, bcfg.selector);
+    if (bcfg.down_sounds.count == 0) return;
+    size_t idx = choose(bcfg.down_sounds, bcfg.selector);
     sounds_[idx].play();
 }
 
 void Typewriter::up(kb::ButtonType type) {
     auto const &bcfg = get_btn_cfg(type, config_);
-    if (bcfg.up_ids.empty()) return;
-    size_t idx = choose(bcfg.up_ids, bcfg.selector);
+    if (bcfg.up_sounds.count == 0) return;
+    size_t idx = choose(bcfg.up_sounds, bcfg.selector);
     sounds_[idx].play();
 }
 
 void Typewriter::hold(kb::ButtonType type) {
     auto const &bcfg = get_btn_cfg(type, config_);
-    if (bcfg.hold_ids.empty()) return;
-    size_t idx = choose(bcfg.hold_ids, bcfg.selector);
+    if (bcfg.hold_sounds.count == 0) return;
+    size_t idx = choose(bcfg.hold_sounds, bcfg.selector);
     sounds_[idx].play();
 }
 
-int Typewriter::get_volume() {
+int Typewriter::get_volume() const {
     return volume_;
 }
 

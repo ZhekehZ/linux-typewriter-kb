@@ -13,11 +13,11 @@ class SDLRAIIContextManager {
 
     SDLRAIIContextManager(int freq, int max_channels, int chunk_size);
 
-    operator bool() const;
+    explicit operator bool() const;
 
     ~SDLRAIIContextManager();
 
-    char const *get_error_message() const;
+    [[nodiscard]] char const *get_error_message() const;
 
  private:
     Status status_;

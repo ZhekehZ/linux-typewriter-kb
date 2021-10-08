@@ -34,7 +34,7 @@ enum class ExitCode {
 };
 
 std::variant<input_event, ExitCode> next_ievent(int fd) {
-    input_event event;
+    input_event event{};
 
     size_t left = sizeof(input_event);
     while (left > 0) {
@@ -87,7 +87,7 @@ std::optional<Event> get_event_from_fd(int fd) {
 
 }// namespace
 
-event_reader::event_reader(config_source config, std::vector<int> descriptors)
+event_reader::event_reader(config_source config, const std::vector<int>& descriptors)
     : config_(config) {
     max_ds_ = -1;
     if (config_.use_stdin) {

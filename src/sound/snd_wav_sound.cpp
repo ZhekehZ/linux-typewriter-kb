@@ -6,27 +6,22 @@
 
 namespace snd {
 
-namespace detail {
+namespace {
 
-std::map<std::string, Bytes> &GET_GLOBAL_STORAGE() {
-    static std::map<std::string, Bytes> STORAGE;
-    return STORAGE;
+std::unique_ptr<Mix_Chunk, void (*)(Mix_Chunk *)> load(
+    injector::injected_resources resource) {
+    auto stream = injector::get_resource_stream(resource);
+    Mix_Chunk *chunk = Mix_LoadWAV_RW(
+        SDL_RWFromConstMem(stream.data(), stream.size()), 1);
+    return {chunk, Mix_FreeChunk};
 }
 
-}// namespace detail
+}// namespace
 
-WAVSound::WAVSound(std::string const &filename, int volume)
-#ifndef INJECT_ASSETS
-    : chunk_(Mix_LoadWAV(filename.c_str()), Mix_FreeChunk)
-#else
-    : chunk_(Mix_LoadWAV_RW(SDL_RWFromMem(detail::GET_GLOBAL_STORAGE()[filename].data,
-                                          static_cast<int>(detail::GET_GLOBAL_STORAGE()[filename].len)),
-                            1),
-             Mix_FreeChunk)
-#endif
-{
-    if (!chunk_.get()) {
-        throw std::runtime_error("Error loading file " + filename + "[" + Mix_GetError() + "]");
+WAVSound::WAVSound(injector::injected_resources resource, int volume)
+    : chunk_(load(resource)) {
+    if (!chunk_) {
+        throw std::runtime_error(std::string("Error loading file [") + Mix_GetError() + "]");
     }
     Mix_VolumeChunk(chunk_.get(), volume);
 }

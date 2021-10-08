@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <injector/injector.hpp>
 #include <map>
 #include <memory>
 #include <optional>
@@ -10,43 +11,11 @@
 
 namespace snd {
 
-namespace detail {
-
-struct Bytes {
-    unsigned char *data;
-    size_t len;
-};
-
-std::map<std::string, Bytes> &GET_GLOBAL_STORAGE();
-
-}// namespace detail
-
-#ifndef INJECT_ASSETS
-#ifndef APPLICATION_FIXED_ABS_PATH
-#define APPLICATION_FIXED_ABS_PATH "./"
-#endif
-#define WAV_RESOURCE(folder, name) APPLICATION_FIXED_ABS_PATH "assets/wav/" #folder "/" #name ".wav"
-#else
-#define WAV_RESOURCE(folder, name)                               \
-    []() {                                                       \
-        extern unsigned char folder##_##name##_wav[];            \
-        extern unsigned int folder##_##name##_wav_len;           \
-        std::string what = #folder #name;                        \
-        ::snd::detail::GET_GLOBAL_STORAGE()[what] =              \
-            ::snd::detail::Bytes{                                \
-                folder##_##name##_wav,                           \
-                static_cast<size_t>(folder##_##name##_wav_len)}; \
-        return what;                                             \
-    }()
-#endif
-
 class WAVSound {
  public:
-    using Ptr = std::shared_ptr<WAVSound>;
-
     void play();
 
-    WAVSound(std::string const &filename, int volume);
+    WAVSound(injector::injected_resources resource, int volume);
 
     void set_volume(int value);
 

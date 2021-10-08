@@ -33,7 +33,7 @@ struct config_source {
 
 class event_reader {
  public:
-    event_reader(config_source config, std::vector<int> descriptors);
+    event_reader(config_source config, const std::vector<int>& descriptors);
 
     std::optional<Event> next();
 

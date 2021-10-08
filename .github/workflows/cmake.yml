@@ -25,6 +25,12 @@ jobs:
       run: |
           sudo apt-get install libsdl2-dev libsdl2-mixer-dev xxd
           clang-format --version
+          git clone https://github.com/ZhekehZ/Resource-Injector
+
+          cd Resource-Injector
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release && sudo cmake --install .
           
 
     - name: Configure CMake

@@ -1,8 +1,6 @@
 #include "os_linux/os_open_file.hpp"
 
 #include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 namespace os {
 

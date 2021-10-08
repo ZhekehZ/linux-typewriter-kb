@@ -4,12 +4,11 @@
 #include "sound/snd_sdl_mixer.hpp"
 #include "typewriter/config.hpp"
 #include "typewriter/typewriter.hpp"
-#include "utils/utils.hpp"
 
 namespace {
 
 kb::Event recv() {
-    kb::Event event;
+    kb::Event event{};
     std::cin.read(reinterpret_cast<char *>(&event.type), sizeof(event.type));
     std::cin.read(reinterpret_cast<char *>(&event.kind), sizeof(event.kind));
     std::cin.read(reinterpret_cast<char *>(&event.value), sizeof(event.value));
