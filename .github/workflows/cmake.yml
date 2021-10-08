@@ -30,7 +30,7 @@ jobs:
           cd Resource-Injector
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release && sudo cmake --install .
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DDO_NOT_TEST=ON && sudo cmake --install .
           
 
     - name: Configure CMake
