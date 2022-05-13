@@ -2,14 +2,14 @@
 MACRO (CONFIG_DEFINE_VARIABLES)
     
     SET (DEB_PACKAGE_NAME      typewriter-keyboard )
-    SET (DEB_VERSION           0.5-alpha           )
+    SET (DEB_VERSION           0.6-alpha           )
     SET (DEB_MAINTAINER_NAME   zhekehz             )
     SET (DEB_MAINTAINER_EMAIL  zzzheka97@gmail.com )
     SET (DEB_DESCRIPTION       "Typewriter sounds for keyboard")
 
-    SET (GEXT_VERSION          0.5                 )
+    SET (GEXT_VERSION          0.6                 )
     SET (GEXT_NAME             Typewriter\ Keyboard)
-    SET (GEXT_SHELL_VERSION    3.38                )
+    SET (GEXT_SHELL_VERSIONS   "\"3.38\", \"40\", \"41\", \"42\"")
     SET (GEXT_DESCRIPTION      "Add a typewriter effect to your keyboard."
                                " "
                                "This extension is based on typewriter-kb application "

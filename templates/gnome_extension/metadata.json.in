@@ -3,5 +3,5 @@
   "uuid": "@GEXT_UUID@",
   "description": "@GEXT_DESCRIPTION@",
   "version": @GEXT_VERSION@,
-  "shell-version": [ "@GEXT_SHELL_VERSION@" ]
+  "shell-version": [ @GEXT_SHELL_VERSIONS@ ]
 }
